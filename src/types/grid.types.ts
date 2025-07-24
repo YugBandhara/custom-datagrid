@@ -3,11 +3,11 @@ export interface Column {
     headerName: string;
     width?: number;
     sortable?: boolean;
-    pinned?: 'left' | 'right' ;
+    pinned?: 'left' | 'right' | null ;
     filterable?: boolean;
     editable?: boolean;
     visible?: boolean;
-    group?:string;
+    group?:string | null ;
     type?: 'text' | 'number' | 'date' | 'select' | 'actions';
   }
   
@@ -34,6 +34,6 @@ export interface Column {
     pagination: PaginationState;
     loading: boolean;
   density: Density,
-    
+  groupOrder: string[],
     error: string | null;
   }

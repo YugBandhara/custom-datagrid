@@ -37,7 +37,7 @@ export default function DensitySelector() {
           Density
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-48 z-[999]">
         <div className="px-2 py-1 border-b border-border">
           <span className="text-xs font-medium text-muted-foreground">
             Select Row Density

@@ -71,18 +71,19 @@ export default function DataGrid() {
     state.sortModel
   );
 
-  const handleColumnDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
+const handleColumnDragEnd = (event: DragEndEvent) => {
+  const { active, over } = event;
+  if (!over || active.id === over.id) return;
 
-    const oldIndex = state.columns.findIndex((col) => col.field === active.id);
-    const newIndex = state.columns.findIndex((col) => col.field === over.id);
+  dispatch({
+    type: "REORDER_COLUMN",
+    payload: {
+      activeId: active.id,
+      overId: over.id,
+    },
+  });
+};
 
-    if (oldIndex !== -1 && newIndex !== -1) {
-      const reordered = arrayMove(state.columns, oldIndex, newIndex);
-      dispatch({ type: "SET_COLUMNS", payload: reordered });
-    }
-  };
 
   const paginatedData = filteredData.slice(
     page * pageSize,
@@ -134,7 +135,7 @@ export default function DataGrid() {
   return (
     <div className="   p-10 max-w-[100%] mx-auto mt-8 shadow-xl rounded-lg border transition-colors duration-300">
       {/* Top Controls */}
-      <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
+      <div className="flex flex-wrap justify-between items-center mb-4 gap-4 ">
         <div className="flex gap-2 items-center w-full md:w-auto flex-1">
           <Input
             type="text"
@@ -160,7 +161,7 @@ export default function DataGrid() {
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-56 z-[999]">
               <div className="px-2 py-1 border-b border-border">
                 <span className="text-xs font-medium text-muted-foreground">
                   Export Data
@@ -233,7 +234,7 @@ export default function DataGrid() {
         items={state.columns.map((col) => col.field)}
         strategy={horizontalListSortingStrategy}
        >
-    <thead className="sticky top-0  bg-white dark:bg-slate-900">
+    <thead className="sticky top-0 z-[100] bg-white dark:bg-slate-900">
       <DataGridHeader
         columns={state.columns}
         allSelected={selectAll}

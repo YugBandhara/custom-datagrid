@@ -20,14 +20,16 @@ export default function Page() {
         headerName: key.charAt(0).toUpperCase() + key.slice(1),
         visible: true,
         pinned: null,
+        group: null, // 👈 initially ungrouped
       }));
+      
   
-      // Add actions column at the end
       const actionColumn = {
         field: "actions",
         headerName: "Actions",
         visible: true,
-        pinned: "right",
+        pinned: null,
+        group: null,
       };
   
       const allColumns = [...baseColumns, actionColumn];
@@ -36,6 +38,7 @@ export default function Page() {
       dispatch({ type: 'SET_VISIBLE_COLUMNS', payload: allColumns.map((c) => c.field) });
     }
   }, [data, dispatch]);
+  
   
 
   return (

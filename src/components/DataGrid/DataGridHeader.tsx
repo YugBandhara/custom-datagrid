@@ -6,14 +6,18 @@ import { Column } from "@/types/grid.types";
 import { FaSort, FaSortUp, FaSortDown, FaThumbtack } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Checkbox } from "../ui/CheckBox";
-import { useSortable } from "@dnd-kit/sortable";
+import { useSortable, SortableContext } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
+import { horizontalListSortingStrategy } from "@dnd-kit/sortable";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/DropDownMenu";
+import { Button } from "../ui/Button";
+import { MoreHorizontal, Group, Pin } from "lucide-react";
 
 interface Props {
   columns: Column[];
@@ -34,7 +38,7 @@ const SortableHeaderCell = ({
   handleSort,
   getSortIcon,
   leftOffset,
-  rightOffset
+  rightOffset,
 }: SortableHeaderCellProps) => {
   const { dispatch } = useDataGridContext();
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -51,7 +55,7 @@ const SortableHeaderCell = ({
     left: col.pinned === "left" ? `${leftOffset}px` : undefined,
     right: col.pinned === "right" ? `${rightOffset}px` : undefined,
     zIndex: col.pinned ? 40 : undefined,
-// ensure pinned stays same color
+    // ensure pinned stays same color
   };
 
   const handlePin = (side: "left" | "right" | null) => {
@@ -80,23 +84,22 @@ const SortableHeaderCell = ({
     document.addEventListener("mouseup", onMouseUp);
   };
 
-  const pinOptions:{
+  const pinOptions: {
     name: string;
     value: "left" | "right" | null;
     color: string;
-  }[]  = [
-    { name: "📌 Pin Left", value: "left", color: "default" },
-    { name: "📌 Pin Right", value: "right", color: "default" },
-    { name: "❌ Unpin", value: null, color: "red" },
-  ];
+  }[] = [
+      { name: "📌 Pin Left", value: "left", color: "default" },
+      { name: "📌 Pin Right", value: "right", color: "default" },
+      { name: "❌ Unpin", value: null, color: "red" },
+    ];
 
   return (
     <motion.th
       ref={setNodeRef}
       style={style}
-      className={`relative py-3 font-medium select-none whitespace-nowrap text-center border border-r group ${
-        col.pinned ? "shadow-md bg-background z-40" : "bg-background"
-      }`}
+      className={`relative py-3 font-normal select-none whitespace-nowrap text-center border border-r group ${col.pinned ? "shadow-md bg-background z-40" : "bg-background"
+        }`}
     >
       <div
         className="flex items-center justify-center gap-2 cursor-pointer px-2"
@@ -108,9 +111,8 @@ const SortableHeaderCell = ({
         <span
           {...attributes}
           {...listeners}
-          className={`text-gray-500 ${
-            col.pinned ? "cursor-default" : "cursor-move"
-          }`}
+          className={`text-gray-500 ${col.pinned ? "cursor-default" : "cursor-move"
+            }`}
           title="Drag to reorder"
         >
           ≡
@@ -120,21 +122,53 @@ const SortableHeaderCell = ({
           {col.headerName}
           {getSortIcon(col.field)}
         </span>
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <FaThumbtack
-              className={`${
-                col.pinned !== null ? "text-red-600" : ""
-              } text-gray-400 hover:text-blue-500 cursor-pointer`}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-6 h-6 p-0 text-muted-foreground hover:text-foreground"
               onClick={(e) => e.stopPropagation()}
-            />
+            >
+              <MoreHorizontal className="w-4 h-4" />
+            </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-40">
+          <DropdownMenuContent align="end" className="w-48">
             <div className="px-2 py-1 border-b border-border">
               <span className="text-xs font-medium text-muted-foreground">
-                Pin Options
+                More Actions
               </span>
+            </div>
+
+            {/* Group Options */}
+            <div className="px-2 pt-2 pb-1 text-xs text-muted-foreground font-semibold">
+              Group
+            </div>
+            {[
+              "General",
+              "Contact",
+              "Employment",
+              "Actions",
+              null
+            ].map((group) => (
+              <DropdownMenuCheckboxItem
+                key={group ?? "none"}
+                checked={col.group === group}
+                onCheckedChange={() =>
+                  dispatch({
+                    type: "UPDATE_COLUMN_GROUP",
+                    payload: { field: col.field, group },
+                  })
+                }
+              >
+                <Group className="mr-2 h-4 w-4" />
+                {group ?? "No Group"}
+              </DropdownMenuCheckboxItem>
+            ))}
+
+            {/* Pin Options */}
+            <div className="px-2 pt-3 pb-1 text-xs text-muted-foreground font-semibold border-t border-border mt-2">
+              Pin
             </div>
             {pinOptions.map((option) => (
               <DropdownMenuCheckboxItem
@@ -143,6 +177,7 @@ const SortableHeaderCell = ({
                 onCheckedChange={() => handlePin(option.value)}
                 className={option.color === "red" ? "text-red-500" : ""}
               >
+                <Pin className="mr-2 h-4 w-4" />
                 {option.name}
               </DropdownMenuCheckboxItem>
             ))}
@@ -211,43 +246,82 @@ export default function DataGridHeader({
     dispatch({ type: "TOGGLE_SORT", payload: field });
   };
 
+
+  const groupedColumns = visibleColumns.reduce((acc, col) => {
+    const group = col.group || "Ungrouped";
+    if (!acc[group]) acc[group] = [];
+    acc[group].push(col);
+    return acc;
+  }, {} as Record<string, Column[]>);
+
   return (
-    <motion.tr
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="sticky top-0 z-[100] bg-background"
-    >
-      {/* Sticky Select All Checkbox */}
+    <>
+<tr className="bg-gray-100 dark:bg-slate-800 text-sm font-semibold border-b border-gray-300 dark:border-slate-700">
+  <th
+    className="sticky left-0 z-[60] bg-gray-100 dark:bg-slate-800 border-r border-gray-300 dark:border-slate-700"
+    style={{ left: 0, zIndex: 60 }}
+  />
+
+  {Object.entries(groupedColumns).map(([group, cols]) => {
+    const pinnedSide = cols[0].pinned;
+    const firstField = cols[0].field;
+    const lastField = cols[cols.length - 1].field;
+    const style: React.CSSProperties = {
+      position: pinnedSide ? "sticky" : "relative",
+      left: pinnedSide === "left" ? `${leftOffsets[firstField] || 0}px` : undefined,
+      right: pinnedSide === "right" ? `${rightOffsets[lastField] || 0}px` : undefined,
+      zIndex: pinnedSide ? 50 : undefined,
+      background: "inherit",
+    };
+
+    return (
       <th
-  
-  className="sticky left-0 z-[60] bg-white dark:bg-slate-900 border-r w-[30px] min-w-[30px] max-w-[30px]"
-
-
-        style={{
-          left: 0,
-          width: "30px",
-          minWidth: "30px",
-          maxWidth: "30px",
-        }}
+        key={group}
+        colSpan={cols.length}
+        className="text-center px-2 py-2 border-r border-gray-300 dark:border-slate-700 text-gray-700 dark:text-gray-300"
+        style={style}
       >
-        <Checkbox
-          checked={allSelected}
-          onCheckedChange={(checked) => onToggleAll(!!checked)}
-          onPointerDown={(e) => e.stopPropagation()}
-        />
+        {group}
       </th>
+    );
+  })}
+</tr>
 
-      {visibleColumns.map((col) => (
-        <SortableHeaderCell
-          key={col.field}
-          col={col}
-          handleSort={handleSort}
-          getSortIcon={getSortIcon}
-          leftOffset={leftOffsets[col.field]}
-          rightOffset={rightOffsets[col.field]}
-        />
-      ))}
-    </motion.tr>
+
+
+      <motion.tr
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="sticky top-0 z-[100] bg-background"
+      >
+        <th
+          className="sticky left-0 z-[101] bg-background border   w-[30px] min-w-[30px] max-w-[30px]"
+          style={{
+            left: 0,
+            width: "30px",
+            minWidth: "30px",
+            maxWidth: "30px",
+          }}
+        >
+          <Checkbox
+            checked={allSelected}
+            onCheckedChange={(checked) => onToggleAll(!!checked)}
+            onPointerDown={(e) => e.stopPropagation()}
+          />
+        </th>
+
+        {visibleColumns.map((col) => (
+          <SortableHeaderCell
+            key={col.field}
+            col={col}
+            handleSort={handleSort}
+            getSortIcon={getSortIcon}
+            leftOffset={leftOffsets[col.field]}
+            rightOffset={rightOffsets[col.field]}
+          />
+        ))}
+      </motion.tr>
+    </>
   );
 }
