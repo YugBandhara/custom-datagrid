@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
@@ -29,15 +29,18 @@ export default function DataGridRow({
   isSelected,
   onToggle,
 }: Props) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
   const { state, dispatch } = useDataGridContext();
-
+  const [viewRowData, setViewRowData] = useState<any>(null);
+  const [isViewModalOpen, setViewModalOpen] = useState(false);
+  
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [editRowData, setEditRowData] = useState<any>(null);
-
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const style = { transform: CSS.Transform.toString(transform), transition };
 
   const densityClasses = {
@@ -48,17 +51,19 @@ export default function DataGridRow({
 
   // Visible columns
   const visibleColumns = useMemo(() => {
-    const pinnedLeft = columns.filter(col => col.pinned === "left");
-    const pinnedRight = columns.filter(col => col.pinned === "right");
-    const unpinned = columns.filter(col => !col.pinned);
-    return [...pinnedLeft, ...unpinned, ...pinnedRight].filter(col => col.visible !== false);
+    const pinnedLeft = columns.filter((col) => col.pinned === "left");
+    const pinnedRight = columns.filter((col) => col.pinned === "right");
+    const unpinned = columns.filter((col) => !col.pinned);
+    return [...pinnedLeft, ...unpinned, ...pinnedRight].filter(
+      (col) => col.visible !== false
+    );
   }, [columns]);
 
   // Sticky offset calculations
   const leftOffsets = useMemo(() => {
     let left = 30;
     const offsets: Record<string, number> = {};
-    for (const col of columns.filter(c => c.pinned === "left")) {
+    for (const col of columns.filter((c) => c.pinned === "left")) {
       offsets[col.field] = left;
       left += col.width || 150;
     }
@@ -68,7 +73,7 @@ export default function DataGridRow({
   const rightOffsets = useMemo(() => {
     let right = 0;
     const offsets: Record<string, number> = {};
-    const pinnedRight = columns.filter(c => c.pinned === "right").reverse();
+    const pinnedRight = columns.filter((c) => c.pinned === "right").reverse();
     for (const col of pinnedRight) {
       offsets[col.field] = right;
       right += col.width || 150;
@@ -91,7 +96,10 @@ export default function DataGridRow({
       return;
     }
 
-    dispatch({ type: "UPDATE_ROW", payload: { ...row, [editingField]: editValue } });
+    dispatch({
+      type: "UPDATE_ROW",
+      payload: { ...row, [editingField]: editValue },
+    });
     setEditingField(null);
     setEditValue("");
     setError(null);
@@ -115,11 +123,18 @@ export default function DataGridRow({
 
   return (
     <>
-      <tr
+      <motion.tr
         ref={setNodeRef}
         {...attributes}
+        layout
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.2, delay: rowIndex * 0.015 }}
         style={style}
-        className={`border-b text-sm transition-colors duration-200 ${densityClasses[state.density]}`}
+        className={`border-b text-sm transition-colors duration-200 ${
+          densityClasses[state.density]
+        }`}
       >
         {/* Checkbox */}
         <td className="sticky left-0 z-40 w-[30px] align-middle bg-[hsl(var(--color-bg-default))] text-[hsl(var(--color-text))]">
@@ -156,7 +171,11 @@ export default function DataGridRow({
               className={`px-4 text-center border-r group transition-colors duration-150 
                 bg-[hsl(var(--color-bg-default))] text-[hsl(var(--color-text))] 
                 border-[hsl(var(--color-border))] 
-                ${col.field !== "actions" ? "hover:bg-[hsl(var(--color-bg-hover))]" : ""} 
+                ${
+                  col.field !== "actions"
+                    ? "hover:bg-[hsl(var(--color-bg-hover))]"
+                    : ""
+                } 
                 ${isEditing ? "cursor-text" : "cursor-pointer"} 
                 ${densityClasses[state.density]}`}
               style={{
@@ -174,7 +193,11 @@ export default function DataGridRow({
                   : ""
               }
               onClick={() => {
-                if (col.field !== "id" && col.field !== "actions" && !isEditing) {
+                if (
+                  col.field !== "id" &&
+                  col.field !== "actions" &&
+                  !isEditing
+                ) {
                   handleCellClick(col.field, value);
                 }
               }}
@@ -193,7 +216,12 @@ export default function DataGridRow({
                 onDeleteRow={(id) =>
                   dispatch({ type: "DELETE_ROW", payload: id })
                 }
-                onViewRow={(row) => alert(`Viewing: ${row.id}`)}
+                onViewRow={(row) => {
+                  console.log(row)
+                  setViewRowData(row);
+                  setViewModalOpen(true);
+                }}
+                
                 wrapperMotionProps={{
                   initial: { opacity: 0, y: 10 },
                   animate: { opacity: 1, y: 0 },
@@ -204,13 +232,40 @@ export default function DataGridRow({
             </td>
           );
         })}
-      </tr>
+      </motion.tr>
 
       {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} title="Edit Row">
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Edit Row"
+      >
         <form
           onSubmit={(e) => {
             e.preventDefault();
+
+            let hasError = false;
+
+            const newErrors: Record<string, string> = {};
+
+            visibleColumns
+              .filter((col) => col.field !== "id" && col.field !== "actions")
+              .forEach((col) => {
+                const value = editRowData?.[col.field] || "";
+                const error = validateField(col.field, value);
+                if (error) {
+                  hasError = true;
+                  newErrors[col.field] = error;
+                }
+              });
+
+            if (hasError) {
+              setFieldErrors(newErrors);
+              return;
+            }
+            setFieldErrors({});
+            handleUpdateRow();
+
             handleUpdateRow();
           }}
           className="flex flex-col max-h-[90vh] w-full relative"
@@ -246,6 +301,11 @@ export default function DataGridRow({
                     >
                       {col.headerName}
                     </label>
+                    {fieldErrors[col.field] && (
+                      <p className="text-sm text-red-500 mt-1">
+                        {fieldErrors[col.field]}
+                      </p>
+                    )}
                   </div>
                 ))}
             </div>
@@ -258,7 +318,11 @@ export default function DataGridRow({
               borderColor: "var(--color-border)",
             }}
           >
-            <Button type="button" variant="secondary" onClick={() => setEditRowData(row)}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setEditRowData(row)}
+            >
               Reset
             </Button>
             <Button type="submit" variant="default">
@@ -267,6 +331,60 @@ export default function DataGridRow({
           </div>
         </form>
       </Modal>
+      <Modal isOpen={isViewModalOpen} onClose={() => setViewModalOpen(false)} title="">
+  <div className="flex flex-col items-center p-6 text-center">
+    {viewRowData?.avatar && (
+      <img
+        src={viewRowData.avatar}
+        alt={viewRowData.name || "Avatar"}
+        className="w-24 h-24 rounded-full mb-4"
+      />
+    )}
+
+    {viewRowData?.name && <h2 className="text-2xl font-semibold mb-1">{viewRowData.name}</h2>}
+    {viewRowData?.email && <p style={{ color: "var(--color-text-muted)" }} className="text-sm">{viewRowData.email}</p>}
+
+    <div className="w-full mt-6 space-y-4 text-left">
+      {Object.entries(viewRowData || {})
+        .filter(([key]) => !["name", "email", "avatar"].includes(key))
+        .map(([key, value]) => {
+          const label = key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
+
+          return (
+            <div
+              key={key}
+              className="flex justify-between items-center border-b pb-2 text-sm"
+              style={{ borderColor: "var(--color-border)" }}
+            >
+              <span style={{ color: "var(--color-text-muted)" }} className="font-medium">
+                {label}
+              </span>
+
+              {key === "status" && typeof value === "string" ? (
+                <span
+                  className="px-2 py-1 rounded-full capitalize font-semibold text-xs"
+                  style={{
+                    backgroundColor:
+                      value.toLowerCase() === "active"
+                        ? "var(--color-success-bg)"
+                        : "var(--color-error-bg)",
+                    color:
+                      value.toLowerCase() === "active"
+                        ? "var(--color-success-text)"
+                        : "var(--color-error-text)",
+                  }}
+                >
+                  {value}
+                </span>
+              ) : (
+                <span style={{ color: "var(--color-text)" }}>{String(value)}</span>
+              )}
+            </div>
+          );
+        })}
+    </div>
+  </div>
+</Modal>
     </>
   );
 }

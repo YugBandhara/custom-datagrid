@@ -45,7 +45,8 @@ const SortableHeaderCell = ({
 
   const style: React.CSSProperties = {
     transform: col.pinned || !isDraggable ? undefined : CSS.Transform.toString(transform),
-    transition,
+    transition: transform ? "transform 0.2s ease" : undefined,
+    willChange: "transform",
     width: `${col.width || 150}px`,
     minWidth: `${col.width || 150}px`,
     maxWidth: `${col.width || 150}px`,
@@ -54,7 +55,10 @@ const SortableHeaderCell = ({
     left: col.pinned === "left" ? `${leftOffset}px` : undefined,
     right: col.pinned === "right" ? `${rightOffset}px` : undefined,
     zIndex: col.pinned ? 40 : undefined,
+    backfaceVisibility: "hidden",
+    transformStyle: "preserve-3d",
   };
+  
 
   const handlePin = (side: "left" | "right" | null) => {
     dispatch({ type: "PIN_COLUMN", payload: { field: col.field, side } });
@@ -96,6 +100,10 @@ const SortableHeaderCell = ({
     <motion.th
       ref={setNodeRef}
       style={style}
+      initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: -10 }}
+  transition={{ duration: 0.25 }}
       className={`relative py-3 font-normal select-none whitespace-nowrap text-center group ${
         col.pinned
           ? "shadow-md bg-[hsl(var(--grid-header))] z-40"

@@ -10,6 +10,7 @@ import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, DragEn
 import { SortableContext, horizontalListSortingStrategy } from "@dnd-kit/sortable";
 import Controls from "./Control";
 import { Pagination } from "./Pagination";
+import { AnimatePresence } from "framer-motion";
 
 export default function DataGrid() {
   const { state, dispatch } = useDataGridContext();
@@ -127,6 +128,7 @@ export default function DataGrid() {
               </thead>
             </SortableContext>
             <tbody>
+            <AnimatePresence initial={false}>
               {paginatedData.map((row, i) => (
                 <DataGridRow
                   key={row.id}
@@ -138,6 +140,7 @@ export default function DataGrid() {
                   onToggle={toggleRowSelect}
                 />
               ))}
+              </AnimatePresence>
             </tbody>
           </table>
         </DndContext>
