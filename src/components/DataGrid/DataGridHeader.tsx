@@ -1,317 +1,109 @@
 "use client";
 
-import React, { JSX } from "react";
-import { useDataGridContext } from "@/contexts/DataGridContext";
-import { Column } from "@/types/grid.types";
-import { FaSort, FaSortUp, FaSortDown, FaThumbtack } from "react-icons/fa";
+import React, { useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Checkbox } from "../ui/CheckBox";
-import { useSortable, SortableContext } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-
-import { horizontalListSortingStrategy } from "@dnd-kit/sortable";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "../ui/DropDownMenu";
-import { Button } from "../ui/Button";
-import { MoreHorizontal, Group, Pin } from "lucide-react";
+import { useDataGridContext } from "@/contexts/DataGridContext";
+import SortableHeaderCell from "./SortableHeaderCell";
+import SelectableHeaderCell from "./SelectableHeaderCell";
+import GroupHeaderRow from "./GroupHeaderRow";
+import { Column } from "@/types/grid.types";
 
 interface Props {
   columns: Column[];
   allSelected: boolean;
-  onToggleAll: (checked: boolean) => void;
+  onToggleAll: () => void;
+  isIndeterminate?: boolean;
 }
-
-interface SortableHeaderCellProps {
-  col: Column;
-  handleSort: (field: string) => void;
-  getSortIcon: (field: string) => JSX.Element;
-  leftOffset?: number;
-  rightOffset?: number;
-}
-
-const SortableHeaderCell = ({
-  col,
-  handleSort,
-  getSortIcon,
-  leftOffset,
-  rightOffset,
-}: SortableHeaderCellProps) => {
-  const { dispatch } = useDataGridContext();
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: col.field });
-
-  const style: React.CSSProperties = {
-    transform: col.pinned ? undefined : CSS.Transform.toString(transform),
-    transition,
-    width: `${col.width || 150}px`,
-    minWidth: `${col.width || 150}px`,
-    maxWidth: `${col.width || 150}px`,
-    position: col.pinned ? "sticky" : "relative",
-    top: 0,
-    left: col.pinned === "left" ? `${leftOffset}px` : undefined,
-    right: col.pinned === "right" ? `${rightOffset}px` : undefined,
-    zIndex: col.pinned ? 40 : undefined,
-    // ensure pinned stays same color
-  };
-
-  const handlePin = (side: "left" | "right" | null) => {
-    dispatch({ type: "PIN_COLUMN", payload: { field: col.field, side } });
-  };
-
-  const startResizing = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    const startX = e.clientX;
-    const startWidth = col.width || 150;
-
-    const onMouseMove = (e: MouseEvent) => {
-      const newWidth = Math.max(startWidth + (e.clientX - startX), 50);
-      dispatch({
-        type: "UPDATE_COLUMN_WIDTH",
-        payload: { field: col.field, width: newWidth },
-      });
-    };
-
-    const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-  };
-
-  const pinOptions: {
-    name: string;
-    value: "left" | "right" | null;
-    color: string;
-  }[] = [
-      { name: "📌 Pin Left", value: "left", color: "default" },
-      { name: "📌 Pin Right", value: "right", color: "default" },
-      { name: "❌ Unpin", value: null, color: "red" },
-    ];
-
-  return (
-    <motion.th
-      ref={setNodeRef}
-      style={style}
-      className={`relative py-3 font-normal select-none whitespace-nowrap text-center border border-r group ${col.pinned ? "shadow-md bg-background z-40" : "bg-background"
-        }`}
-    >
-      <div
-        className="flex items-center justify-center gap-2 cursor-pointer px-2"
-        onClick={(e) => {
-          e.stopPropagation();
-          if (col.field !== "avatar") handleSort(col.field);
-        }}
-      >
-        <span
-          {...attributes}
-          {...listeners}
-          className={`text-gray-500 ${col.pinned ? "cursor-default" : "cursor-move"
-            }`}
-          title="Drag to reorder"
-        >
-          ≡
-        </span>
-
-        <span className="flex items-center gap-1">
-          {col.headerName}
-          {getSortIcon(col.field)}
-        </span>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-6 h-6 p-0 text-muted-foreground hover:text-foreground"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <MoreHorizontal className="w-4 h-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <div className="px-2 py-1 border-b border-border">
-              <span className="text-xs font-medium text-muted-foreground">
-                More Actions
-              </span>
-            </div>
-
-            {/* Group Options */}
-            <div className="px-2 pt-2 pb-1 text-xs text-muted-foreground font-semibold">
-              Group
-            </div>
-            {[
-              "General",
-              "Contact",
-              "Employment",
-              "Actions",
-              null
-            ].map((group) => (
-              <DropdownMenuCheckboxItem
-                key={group ?? "none"}
-                checked={col.group === group}
-                onCheckedChange={() =>
-                  dispatch({
-                    type: "UPDATE_COLUMN_GROUP",
-                    payload: { field: col.field, group },
-                  })
-                }
-              >
-                <Group className="mr-2 h-4 w-4" />
-                {group ?? "No Group"}
-              </DropdownMenuCheckboxItem>
-            ))}
-
-            {/* Pin Options */}
-            <div className="px-2 pt-3 pb-1 text-xs text-muted-foreground font-semibold border-t border-border mt-2">
-              Pin
-            </div>
-            {pinOptions.map((option) => (
-              <DropdownMenuCheckboxItem
-                key={option.name}
-                checked={col.pinned === option.value}
-                onCheckedChange={() => handlePin(option.value)}
-                className={option.color === "red" ? "text-red-500" : ""}
-              >
-                <Pin className="mr-2 h-4 w-4" />
-                {option.name}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div
-        onMouseDown={startResizing}
-        className="absolute top-0 right-0 h-full w-2 cursor-col-resize "
-        style={{
-          pointerEvents: "auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div className="w-1 h-6 bg-gray-300 rounded-full hover:bg-blue-500" />
-      </div>
-    </motion.th>
-  );
-};
 
 export default function DataGridHeader({
   columns,
   allSelected,
   onToggleAll,
+  isIndeterminate,
 }: Props) {
   const { state, dispatch } = useDataGridContext();
 
-  const pinnedLeft = columns.filter((col) => col.pinned === "left");
-  const pinnedRight = columns.filter((col) => col.pinned === "right");
-  const unpinned = columns.filter((col) => !col.pinned);
-  const visibleColumns = [...pinnedLeft, ...unpinned, ...pinnedRight].filter(
-    (col) => col.visible !== false
+  const visibleColumns = useMemo(
+    () => columns.filter((col) => col.visible !== false),
+    [columns]
   );
 
-  // Calculate left offsets
-  const leftOffsets: Record<string, number> = {};
-  let left = 30;
-  for (const col of pinnedLeft) {
-    leftOffsets[col.field] = left;
-    left += col.width || 150;
-  }
+  const pinnedLeft = useMemo(() => visibleColumns.filter((col) => col.pinned === "left"), [visibleColumns]);
+  const pinnedRight = useMemo(() => visibleColumns.filter((col) => col.pinned === "right"), [visibleColumns]);
+  const unpinned = useMemo(() => visibleColumns.filter((col) => !col.pinned), [visibleColumns]);
+  const orderedColumns = [...pinnedLeft, ...unpinned, ...pinnedRight];
 
-  // Calculate right offsets
-  const rightOffsets: Record<string, number> = {};
-  let right = 0;
-  for (let i = pinnedRight.length - 1; i >= 0; i--) {
-    const col = pinnedRight[i];
-    rightOffsets[col.field] = right;
-    right += col.width || 150;
-  }
+  const leftOffsets = useMemo(() => {
+    let left = 30;
+    const offsets: Record<string, number> = {};
+    for (const col of pinnedLeft) {
+      offsets[col.field] = left;
+      left += col.width || 150;
+    }
+    return offsets;
+  }, [pinnedLeft]);
 
-  const getSortIcon = (field: string): JSX.Element => {
-    const sort = state.sortModel.find((s) => s.field === field);
-    if (!sort) return <FaSort className="inline" />;
-    return sort.direction === "asc" ? (
-      <FaSortUp className="inline" />
-    ) : (
-      <FaSortDown className="inline" />
-    );
-  };
+  const rightOffsets = useMemo(() => {
+    let right = 0;
+    const offsets: Record<string, number> = {};
+    for (let i = pinnedRight.length - 1; i >= 0; i--) {
+      const col = pinnedRight[i];
+      offsets[col.field] = right;
+      right += col.width || 150;
+    }
+    return offsets;
+  }, [pinnedRight]);
 
-  const handleSort = (field: string) => {
-    dispatch({ type: "TOGGLE_SORT", payload: field });
-  };
+  const groupedColumns = useMemo(() => {
+    return orderedColumns.reduce((acc, col) => {
+      const group = col.group || "Ungrouped";
+      if (!acc[group]) acc[group] = [];
+      acc[group].push(col);
+      return acc;
+    }, {} as Record<string, Column[]>);
+  }, [orderedColumns]);
 
+  const getSortIcon = useCallback(
+    (field: string) => {
+      const sort = state.sortModel.find((s) => s.field === field);
+      if (!sort) return <span className="inline">⇅</span>;
+      return sort.direction === "asc" ? (
+        <span className="inline">↑</span>
+      ) : (
+        <span className="inline">↓</span>
+      );
+    },
+    [state.sortModel]
+  );
 
-  const groupedColumns = visibleColumns.reduce((acc, col) => {
-    const group = col.group || "Ungrouped";
-    if (!acc[group]) acc[group] = [];
-    acc[group].push(col);
-    return acc;
-  }, {} as Record<string, Column[]>);
+  const handleSort = useCallback(
+    (field: string) => {
+      dispatch({ type: "TOGGLE_SORT", payload: field });
+    },
+    [dispatch]
+  );
 
   return (
     <>
-<tr className="bg-gray-100 dark:bg-slate-800 text-sm font-semibold border-b border-gray-300 dark:border-slate-700">
-  <th
-    className="sticky left-0 z-[60] bg-gray-100 dark:bg-slate-800 border-r border-gray-300 dark:border-slate-700"
-    style={{ left: 0, zIndex: 60 }}
-  />
-
-  {Object.entries(groupedColumns).map(([group, cols]) => {
-    const pinnedSide = cols[0].pinned;
-    const firstField = cols[0].field;
-    const lastField = cols[cols.length - 1].field;
-    const style: React.CSSProperties = {
-      position: pinnedSide ? "sticky" : "relative",
-      left: pinnedSide === "left" ? `${leftOffsets[firstField] || 0}px` : undefined,
-      right: pinnedSide === "right" ? `${rightOffsets[lastField] || 0}px` : undefined,
-      zIndex: pinnedSide ? 50 : undefined,
-      background: "inherit",
-    };
-
-    return (
-      <th
-        key={group}
-        colSpan={cols.length}
-        className="text-center px-2 py-2 border-r border-gray-300 dark:border-slate-700 text-gray-700 dark:text-gray-300"
-        style={style}
-      >
-        {group}
-      </th>
-    );
-  })}
-</tr>
-
-
+      <GroupHeaderRow
+        groupedColumns={groupedColumns}
+        leftOffsets={leftOffsets}
+        rightOffsets={rightOffsets}
+      />
 
       <motion.tr
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="sticky top-0 z-[100] bg-background"
+        className="sticky top-0 z-[100] bg-[hsl(var(--grid-header))]"
       >
-        <th
-          className="sticky left-0 z-[101] bg-background border   w-[30px] min-w-[30px] max-w-[30px]"
-          style={{
-            left: 0,
-            width: "30px",
-            minWidth: "30px",
-            maxWidth: "30px",
-          }}
-        >
-          <Checkbox
-            checked={allSelected}
-            onCheckedChange={(checked) => onToggleAll(!!checked)}
-            onPointerDown={(e) => e.stopPropagation()}
-          />
-        </th>
+        <SelectableHeaderCell
+          allSelected={allSelected}
+          isIndeterminate={isIndeterminate}
+          onToggleAll={onToggleAll}
+        />
 
-        {visibleColumns.map((col) => (
+        {orderedColumns.map((col) => (
           <SortableHeaderCell
             key={col.field}
             col={col}

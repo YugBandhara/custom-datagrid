@@ -2,105 +2,137 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
-    /* Professional data grid color scheme */
+    /* Base Colors (Old Naming) */
     --background: 0 0% 98%;
     --foreground: 224 71% 4%;
-
+    --color-border: hsl(210 20% 88%);
+    --color-bg-hover: hsl(210 16% 93%);
+  
+    /* Base Colors (New Naming Convention) */
+    --color-bg-default: 0 0% 98%;
+    --color-text: 224 71% 4%;
+    --color-border: 210 20% 88%;
+    --color-bg-hover: 210 20% 94%;
+  
+    /* Card & Popover */
     --card: 0 0% 100%;
     --card-foreground: 224 71% 4%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 224 71% 4%;
-
+  
+    /* Primary */
     --primary: 221 83% 53%;
     --primary-foreground: 210 40% 98%;
     --primary-hover: 221 83% 45%;
-
+  
+    /* Secondary */
     --secondary: 210 40% 96%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --secondary-hover: 210 40% 92%;
-
+  
+    /* Muted & Accent */
     --muted: 220 14% 96%;
     --muted-foreground: 220 9% 46%;
-
     --accent: 210 40% 96%;
     --accent-foreground: 222.2 47.4% 11.2%;
-
+  
+    /* Feedback Colors */
     --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
-
     --success: 142 76% 36%;
     --success-foreground: 210 40% 98%;
-
     --warning: 38 92% 50%;
     --warning-foreground: 222.2 47.4% 11.2%;
-
+  
+    /* Form Controls */
     --border: 220 13% 91%;
     --input: 220 13% 91%;
     --ring: 221 83% 53%;
-
-    /* Grid specific colors */
+  
+    /* Grid / Table */
     --grid-header: 220 14% 96%;
     --grid-header-foreground: 224 71% 4%;
-    --grid-row-hover: 221 83% 98%;
+    --grid-row-hover: 220 25% 92%;
     --grid-row-selected: 221 83% 95%;
     --grid-border: 220 13% 88%;
     --grid-sort-active: 221 83% 53%;
-
-    /* Animation variables */
+  
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  
+    /* Transitions & Radius */
     --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
-
+  
+  
   .dark {
+    /* Base Colors (Old Naming) */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
+    --color-border: hsl(210 15% 30%);
+    --color-bg-hover: hsl(217 20% 14%); /* matches grid-row-hover */
+  
+    /* Base Colors (New Naming Convention) */
+    --color-bg-default: 222.2 84% 4.9%;
+    --color-text: 210 40% 98%;
+    --color-border: 210 15% 30%;
+    --color-bg-hover: 217 20% 14%;
+  
+    /* Card & Popover */
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
+  
+    /* Primary */
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
+    --primary-hover: 210 40% 90%;
+  
+    /* Secondary */
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
+    --secondary-hover: 217.2 32.6% 22.5%;
+  
+    /* Muted & Accent */
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-
+  
+    /* Feedback Colors */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
+    --success: 142 70% 30%;
+    --success-foreground: 210 40% 98%;
+    --warning: 38 85% 45%;
+    --warning-foreground: 210 40% 98%;
+  
+    /* Form Controls */
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+  
+    /* Grid / Table */
+    --grid-header: 222.2 30% 12%;
+    --grid-header-foreground: 210 40% 98%;
+    --grid-row-hover: 222.2 20% 14%;
+    --grid-row-selected: 222.2 28% 18%;
+    --grid-border: 220 14% 22%;
+    --grid-sort-active: 221 100% 70%;
+  
+    /* Sidebar */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -110,14 +142,378 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
+  
+  .blue {
+    --background: 210 100% 98%;
+    --foreground: 215 100% 20%;
+    --color-bg-default: 210 100% 98%;
+    --color-text: 215 100% 20%;
+    --color-border: 210 100% 60%;
+    --color-bg-hover: 210 80% 94%;
+  
+    --card: 210 100% 97%;
+    --card-foreground: 215 100% 20%;
+  
+    --popover: 210 100% 97%;
+    --popover-foreground: 215 100% 20%;
+  
+    --primary: 215 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 215 100% 50%;
+  
+    --secondary: 210 80% 95%;
+    --secondary-foreground: 215 100% 20%;
+    --secondary-hover: 210 80% 90%;
+  
+    --muted: 210 60% 95%;
+    --muted-foreground: 210 30% 30%;
+  
+    --accent: 210 90% 85%;
+    --accent-foreground: 215 100% 20%;
+  
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+  
+    --success: 145 60% 40%;
+    --success-foreground: 0 0% 100%;
+  
+    --warning: 40 90% 55%;
+    --warning-foreground: 215 100% 20%;
+  
+    --border: 210 80% 90%;
+    --input: 210 80% 90%;
+    --ring: 215 100% 60%;
+  
+    --grid-header: 210 60% 95%;
+    --grid-header-foreground: 215 100% 20%;
+    --grid-row-hover: 210 60% 90%;
+    --grid-row-selected: 210 100% 85%;
+    --grid-border: 210 50% 80%;
+    --grid-sort-active: 215 100% 50%;
+  
+    --sidebar-background: 210 100% 96%;
+    --sidebar-foreground: 215 100% 20%;
+    --sidebar-primary: 215 100% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 80% 92%;
+    --sidebar-accent-foreground: 215 100% 20%;
+    --sidebar-border: 210 80% 88%;
+    --sidebar-ring: 215 100% 60%;
+  }
+  
 
-@layer base {
+  .dim {
+    --background: 240 6% 12%;
+    --foreground: 220 15% 85%;
+    --color-bg-default: 225 15% 14%;
+    --color-text: 210 20% 90%;
+    --color-border: 220 15% 28%;
+    --color-bg-hover: 225 15% 18%;
+  
+    --card: 240 6% 14%;
+    --card-foreground: 220 15% 85%;
+  
+    --popover: 240 6% 14%;
+    --popover-foreground: 220 15% 85%;
+  
+    --primary: 220 90% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 220 90% 70%;
+  
+    --secondary: 220 15% 20%;
+    --secondary-foreground: 220 15% 85%;
+    --secondary-hover: 220 15% 30%;
+  
+    --muted: 220 10% 20%;
+    --muted-foreground: 220 10% 65%;
+  
+    --accent: 220 25% 22%;
+    --accent-foreground: 220 15% 85%;
+  
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 220 15% 95%;
+  
+    --success: 142 70% 30%;
+    --success-foreground: 220 15% 95%;
+  
+    --warning: 38 85% 45%;
+    --warning-foreground: 220 15% 95%;
+  
+    --border: 220 15% 22%;
+    --input: 220 15% 22%;
+    --ring: 220 90% 60%;
+  
+    --grid-header: 240 5% 16%;
+    --grid-header-foreground: 220 15% 85%;
+    --grid-row-hover: 240 5% 18%;
+    --grid-row-selected: 240 5% 20%;
+    --grid-border: 220 10% 25%;
+    --grid-sort-active: 220 100% 70%;
+  
+    --sidebar-background: 240 5% 14%;
+    --sidebar-foreground: 220 15% 85%;
+    --sidebar-primary: 220 90% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 18%;
+    --sidebar-accent-foreground: 220 15% 85%;
+    --sidebar-border: 240 5% 18%;
+    --sidebar-ring: 220 90% 60%;
+  }
+  
+  .rose {
+    --background: 340 100% 98%;
+    --foreground: 345 100% 20%;
+    --color-bg-default: 340 100% 98%;
+    --color-text: 340 100% 25%;
+    --color-border: 340 100% 70%;
+    --color-bg-hover: 340 100% 94%;
+  
+    --card: 340 100% 97%;
+    --card-foreground: 345 100% 20%;
+  
+    --popover: 340 100% 97%;
+    --popover-foreground: 345 100% 20%;
+  
+    --primary: 345 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 345 100% 50%;
+  
+    --secondary: 340 80% 95%;
+    --secondary-foreground: 345 100% 20%;
+    --secondary-hover: 340 80% 90%;
+  
+    --muted: 340 60% 95%;
+    --muted-foreground: 340 30% 30%;
+  
+    --accent: 340 90% 85%;
+    --accent-foreground: 345 100% 20%;
+  
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+  
+    --success: 145 60% 40%;
+    --success-foreground: 0 0% 100%;
+  
+    --warning: 40 90% 55%;
+    --warning-foreground: 345 100% 20%;
+  
+    --border: 340 80% 90%;
+    --input: 340 80% 90%;
+    --ring: 345 100% 60%;
+  
+    --grid-header: 340 60% 95%;
+    --grid-header-foreground: 345 100% 20%;
+    --grid-row-hover: 340 60% 90%;
+    --grid-row-selected: 340 100% 85%;
+    --grid-border: 340 50% 80%;
+    --grid-sort-active: 345 100% 50%;
+  
+    --sidebar-background: 340 100% 96%;
+    --sidebar-foreground: 345 100% 20%;
+    --sidebar-primary: 345 100% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 340 80% 92%;
+    --sidebar-accent-foreground: 345 100% 20%;
+    --sidebar-border: 340 80% 88%;
+    --sidebar-ring: 345 100% 60%;
+  }
+  
+
+  .emerald {
+    --background: 160 100% 98%;
+    --foreground: 160 100% 15%;
+    --color-bg-default: 145 60% 96%;
+    --color-text: 145 85% 20%;
+    --color-border: 145 70% 50%;
+    --color-bg-hover: 145 60% 91%;
+  
+    --card: 160 100% 97%;
+    --card-foreground: 160 100% 15%;
+  
+    --popover: 160 100% 97%;
+    --popover-foreground: 160 100% 15%;
+  
+    --primary: 160 84% 39%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 160 84% 30%;
+  
+    --secondary: 160 70% 94%;
+    --secondary-foreground: 160 100% 15%;
+    --secondary-hover: 160 70% 90%;
+  
+    --muted: 160 50% 94%;
+    --muted-foreground: 160 30% 30%;
+  
+    --accent: 160 80% 85%;
+    --accent-foreground: 160 100% 15%;
+  
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+  
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+  
+    --warning: 38 90% 55%;
+    --warning-foreground: 160 100% 15%;
+  
+    --border: 160 80% 88%;
+    --input: 160 80% 88%;
+    --ring: 160 84% 39%;
+  
+    --grid-header: 160 60% 95%;
+    --grid-header-foreground: 160 100% 15%;
+    --grid-row-hover: 160 60% 90%;
+    --grid-row-selected: 160 100% 85%;
+    --grid-border: 160 50% 80%;
+    --grid-sort-active: 160 84% 30%;
+  
+    --sidebar-background: 160 100% 96%;
+    --sidebar-foreground: 160 100% 15%;
+    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 160 70% 92%;
+    --sidebar-accent-foreground: 160 100% 15%;
+    --sidebar-border: 160 70% 88%;
+    --sidebar-ring: 160 84% 39%;
+  }
+  
+
+  .amber {
+    --background: 45 100% 98%;
+    --foreground: 42 100% 25%;
+    --color-bg-default: 45 100% 96%;
+    --color-text: 40 100% 20%;
+    --color-border: 40 100% 60%;
+    --color-bg-hover: 45 100% 90%;
+  
+    --card: 45 100% 97%;
+    --card-foreground: 42 100% 25%;
+  
+    --popover: 45 100% 97%;
+    --popover-foreground: 42 100% 25%;
+  
+    --primary: 42 100% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 42 100% 45%;
+  
+    --secondary: 45 80% 95%;
+    --secondary-foreground: 42 100% 25%;
+    --secondary-hover: 45 80% 90%;
+  
+    --muted: 45 60% 95%;
+    --muted-foreground: 45 30% 30%;
+  
+    --accent: 45 90% 85%;
+    --accent-foreground: 42 100% 25%;
+  
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+  
+    --success: 142 70% 35%;
+    --success-foreground: 0 0% 100%;
+  
+    --warning: 38 90% 50%;
+    --warning-foreground: 42 100% 25%;
+  
+    --border: 45 80% 88%;
+    --input: 45 80% 88%;
+    --ring: 42 100% 55%;
+  
+    --grid-header: 45 60% 95%;
+    --grid-header-foreground: 42 100% 25%;
+    --grid-row-hover: 45 60% 90%;
+    --grid-row-selected: 45 100% 85%;
+    --grid-border: 45 50% 80%;
+    --grid-sort-active: 42 100% 45%;
+  
+    --sidebar-background: 45 100% 96%;
+    --sidebar-foreground: 42 100% 25%;
+    --sidebar-primary: 42 100% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 45 80% 92%;
+    --sidebar-accent-foreground: 42 100% 25%;
+    --sidebar-border: 45 80% 88%;
+    --sidebar-ring: 42 100% 55%;
+  }
+  
+
+  .slate {
+    --background: 210 20% 98%;
+    --foreground: 215 20% 20%;
+    --color-bg-default: 220 20% 96%;
+    --color-text: 220 20% 20%;
+    --color-border: 220 15% 75%;
+    --color-bg-hover: 220 20% 92%;
+  
+    --card: 210 20% 97%;
+    --card-foreground: 215 20% 20%;
+  
+    --popover: 210 20% 97%;
+    --popover-foreground: 215 20% 20%;
+  
+    --primary: 215 20% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 215 20% 40%;
+  
+    --secondary: 210 10% 94%;
+    --secondary-foreground: 215 20% 20%;
+    --secondary-hover: 210 10% 90%;
+  
+    --muted: 210 10% 92%;
+    --muted-foreground: 210 10% 40%;
+  
+    --accent: 210 20% 88%;
+    --accent-foreground: 215 20% 20%;
+  
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+  
+    --success: 145 60% 40%;
+    --success-foreground: 0 0% 100%;
+  
+    --warning: 40 90% 55%;
+    --warning-foreground: 215 20% 20%;
+  
+    --border: 210 10% 88%;
+    --input: 210 10% 88%;
+    --ring: 215 20% 50%;
+  
+    --grid-header: 210 20% 95%;
+    --grid-header-foreground: 215 20% 20%;
+    --grid-row-hover: 210 20% 90%;
+    --grid-row-selected: 210 30% 85%;
+    --grid-border: 210 15% 80%;
+    --grid-sort-active: 215 20% 40%;
+  
+    --sidebar-background: 210 20% 96%;
+    --sidebar-foreground: 215 20% 20%;
+    --sidebar-primary: 215 20% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 15% 90%;
+    --sidebar-accent-foreground: 215 20% 20%;
+    --sidebar-border: 210 15% 85%;
+    --sidebar-ring: 215 20% 50%;
+  }
+  
+
+
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100;
+    @apply border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring;
+  }
+
+  th,
+  td {
+    @apply border-border;
   }
 }

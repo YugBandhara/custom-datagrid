@@ -1,25 +1,34 @@
 import { useEffect, useState } from 'react';
 
+const themes = ['light', 'dark', 'blue', 'dim','rose', 'emerald', 'amber',  'slate'];
+
 export default function useTheme() {
-  const [theme, setTheme] = useState<'light' | 'dark' | string>('light');
+  const [theme, setTheme] = useState<string>('light');
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const activeTheme = storedTheme || (prefersDark ? 'dark' : 'light');
+    const defaultTheme = storedTheme || (prefersDark ? 'dark' : 'light');
 
-    setTheme(activeTheme);
-    document.documentElement.classList.remove('light', 'dark');
-    document.documentElement.classList.add(activeTheme);
+    setTheme(defaultTheme);
+    applyTheme(defaultTheme);
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.remove('light', 'dark');
+  const applyTheme = (newTheme: string) => {
+    document.documentElement.classList.remove(...themes);
     document.documentElement.classList.add(newTheme);
+    localStorage.setItem('theme', newTheme);
   };
 
-  return { theme, toggleTheme };
+  const setThemeManually = (newTheme: string) => {
+    setTheme(newTheme);
+    applyTheme(newTheme);
+  };
+
+  return { theme, toggleTheme: () => setThemeManually(nextTheme(theme)), setThemeManually };
+}
+
+function nextTheme(current: string) {
+  const index = themes.indexOf(current);
+  return themes[(index + 1) % themes.length];
 }
