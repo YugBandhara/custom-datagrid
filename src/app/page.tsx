@@ -20,7 +20,7 @@ export default function Page() {
         headerName: key.charAt(0).toUpperCase() + key.slice(1),
         visible: true,
         pinned: null,
-        group: null, // 👈 initially ungrouped
+        group: null, 
       }));
       
   

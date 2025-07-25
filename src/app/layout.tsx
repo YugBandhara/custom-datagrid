@@ -5,7 +5,7 @@ import './globals.css'
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" >
-      <body className="bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
+      <body className="bg-background text-foreground">
         <DataGridProvider>{children}</DataGridProvider>
       </body>
     </html>

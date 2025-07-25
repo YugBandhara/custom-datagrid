@@ -36,7 +36,6 @@ export default function ColumnManager() {
       payload: field,
     });
   };
-
   
   return (
     <DropdownMenu>
