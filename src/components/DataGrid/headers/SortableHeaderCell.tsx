@@ -6,13 +6,13 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { MoreHorizontal, Pin, Group } from "lucide-react";
 
-import { Button } from "../ui/Button";
+import { Button } from "../../ui/Button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "../ui/DropDownMenu";
+} from "../../ui/DropDownMenu";
 import { useDataGridContext } from "@/contexts/DataGridContext";
 import { Column } from "@/types/grid.types";
 

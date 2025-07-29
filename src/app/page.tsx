@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePaginatedApi } from '../hooks/usePaginatedApi';
 import { useDataGridContext } from '@/contexts/DataGridContext';
-import DataGrid from '@/components/DataGrid/DataGrid';
-import DataGridSkeleton from '@/components/DataGrid/DataGridSkeleton';
+import DataGrid from '@/components/DataGrid/core/DataGrid';
+import DataGridSkeleton from '@/components/DataGrid/core/DataGridSkeleton';
 import { Table } from 'lucide-react';
 
 export default function Page() {

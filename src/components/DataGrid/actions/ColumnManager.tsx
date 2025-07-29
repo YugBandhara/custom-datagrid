@@ -6,12 +6,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
-} from "../ui/DropDownMenu";
-import { Button } from "../ui/Button";
+} from "../../ui/DropDownMenu";
+import { Button } from "../../ui/Button";
 import { Eye } from "lucide-react";
 import { useDataGridContext } from "@/contexts/DataGridContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Checkbox } from "../ui/CheckBox";
+import { Checkbox } from "../../ui/CheckBox";
 
 export default function ColumnManager() {
   const { state, dispatch } = useDataGridContext();
@@ -62,7 +62,6 @@ export default function ColumnManager() {
       {ColumnOptions}
     </div>
   ) : (
-    // 🖥️ Use dropdown for desktop
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="w-full sm:w-auto">

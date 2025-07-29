@@ -4,8 +4,9 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { Dispatch, SetStateAction } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
-import {User} from "../../types/api.types"
+
 import { Action } from "@/contexts/DataGridContext";
+import { User } from "@/types/api.types";
 type Props = {
   page: number;
   pageSize: number;
@@ -17,7 +18,7 @@ type Props = {
   data: User[];
 };
 
-export const useDataGridShortcuts = ({
+const useDataGridShortcuts = ({
   page,
   pageSize,
   filteredLength,
@@ -67,3 +68,5 @@ export const useDataGridShortcuts = ({
     }
   });
 };
+
+export default useDataGridShortcuts

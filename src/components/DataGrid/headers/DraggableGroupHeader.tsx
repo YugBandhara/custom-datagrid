@@ -7,7 +7,7 @@ interface DraggableGroupHeaderProps {
   colSpan: number;
 }
 
-export const DraggableGroupHeader: React.FC<DraggableGroupHeaderProps> = ({
+const DraggableGroupHeader: React.FC<DraggableGroupHeaderProps> = ({
   group,
   colSpan,
 }) => {
@@ -33,3 +33,5 @@ export const DraggableGroupHeader: React.FC<DraggableGroupHeaderProps> = ({
     </th>
   );
 };
+
+export default DraggableGroupHeader;

@@ -6,9 +6,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropDownMenu";
 import { BsPalette } from "react-icons/bs";
-import {useTheme} from "../../contexts/ThemeContext";
+
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const themes = [
   { label: "Blue", value: "blue", color: "bg-blue-500" },

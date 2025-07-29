@@ -2,14 +2,14 @@
 
 import React from 'react';
 import { PaginationState } from '@/types/grid.types';
-import { Button } from '../ui/Button';
+import { Button } from '../../ui/Button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/Select';
+} from '../../ui/Select';
 import {
   ChevronLeft,
   ChevronRight,
@@ -28,7 +28,7 @@ interface PaginationProps {
   rowCount: number;
 }
 
-export function Pagination({
+export default function Pagination({
   pagination,
   onPageChange,
   onPageSizeChange,

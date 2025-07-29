@@ -3,11 +3,12 @@
 import React, { useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useDataGridContext } from "@/contexts/DataGridContext";
-import SortableHeaderCell from "./SortableHeaderCell";
-import SelectableHeaderCell from "./SelectableHeaderCell";
-import GroupHeaderRow from "./GroupHeaderRow";
+
 import { Column } from "@/types/grid.types";
 import { ChevronsUpDown, ChevronUp, ChevronDown } from "lucide-react";
+import GroupHeaderRow from "./GroupHeaderRow";
+import SelectableHeaderCell from "./SelectableHeaderCell";
+import SortableHeaderCell from "./SortableHeaderCell";
 
 interface Props {
   columns: Column[];

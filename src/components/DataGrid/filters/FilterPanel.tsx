@@ -7,11 +7,11 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "../ui/Select";
-import { Input } from "../ui/Input";
-import { Label } from "../ui/Label";
-import { Card, CardContent } from "../ui/Card";
-import { Button } from "../ui/Button";
+} from "../../ui/Select";
+import { Input } from "../../ui/Input";
+import { Label } from "../../ui/Label";
+import { Card, CardContent } from "../../ui/Card";
+import { Button } from "../../ui/Button";
 import { Filter, Search, CheckCircle, XCircle } from "lucide-react";
 
 interface Props {

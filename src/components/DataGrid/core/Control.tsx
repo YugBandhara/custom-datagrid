@@ -1,23 +1,22 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import SearchInput from "./SearchInput";
-import BulkActions from "./BulkActions";
-import ExportMenuDropdown from "./ExportMenuDropdown";
-import ExportMenuButtons from "./ExportMenuButtons";
-import ThemeSelector from "./ThemeSelector";
-import ThemeToggle from "./ThemeToggle";
-import FilterToggleButton from "./FilterToggleButton";
-import ColumnManager from "./ColumnManager";
-import ViewManager from "./ViewManager";
+import SearchInput from "../filters/SearchInput";
+import BulkActions from "../actions/BulkActions";
+import ExportMenuDropdown from "../actions/ExportMenuDropdown";
+import ExportMenuButtons from "../actions/ExportMenuButtons";
+
+import FilterToggleButton from "../filters/FilterToggleButton";
+import ColumnManager from "../actions/ColumnManager";
+
 
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "../ui/Button";
+import { Button } from "../../ui/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "../ui/DropDownMenu";
+} from "../../ui/DropDownMenu";
 
 import { FileText, Settings } from "lucide-react";
 import { BsPalette } from "react-icons/bs";
@@ -25,6 +24,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDataGridContext } from "@/contexts/DataGridContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { User } from "@/types/api.types";
+import ThemeSelector from "../theme/ThemeSelector";
+import ThemeToggle from "../theme/ThemeToggle";
+import ViewManager from "../actions/ViewManager";
 
 interface ControlsProps {
   search: string;

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "../ui/DropDownMenu";
-import { Button } from "../ui/Button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "../../ui/DropDownMenu";
+import { Button } from "../../ui/Button";
 import { GripHorizontal, Trash } from "lucide-react";
 
 import ExportMenuButtons from "./ExportMenuButtons";

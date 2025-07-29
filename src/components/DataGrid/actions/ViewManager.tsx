@@ -6,8 +6,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
-} from "../ui/DropDownMenu";
-import { Button } from "../ui/Button";
+} from "../../ui/DropDownMenu";
+import { Button } from "../../ui/Button";
 import { Grid3X3 } from "lucide-react";
 import { useDataGridContext } from "@/contexts/DataGridContext";
 import { Density } from "@/types/grid.types";

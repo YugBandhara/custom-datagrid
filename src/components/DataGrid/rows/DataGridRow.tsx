@@ -3,15 +3,16 @@
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Column } from "@/types/grid.types";
-import { Checkbox } from "../ui/CheckBox";
+import { Checkbox } from "../../ui/CheckBox";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useDataGridContext } from "@/contexts/DataGridContext";
 import { validateField } from "@/utils/validators";
+
+import Modal from "../../ui/Modal";
+import { Button } from "../../ui/Button";
+import {User} from "../../../types/api.types"
 import DataGridCell from "./DataGridCell";
-import Modal from "../ui/Modal";
-import { Button } from "../ui/Button";
-import {User} from "../../types/api.types"
 interface Props {
   id: string;
   row: User;

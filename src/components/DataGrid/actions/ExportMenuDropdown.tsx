@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { DropdownMenuCheckboxItem } from "../ui/DropDownMenu";
+import { DropdownMenuCheckboxItem } from "../../ui/DropDownMenu";
 import { FileText } from "lucide-react";
 import { exportCSV, exportJSON } from "@/utils/exportUtils";
 import { User } from "@/types/api.types";

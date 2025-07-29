@@ -16,13 +16,17 @@ import {
 } from "@dnd-kit/sortable";
 import { AnimatePresence } from "framer-motion";
 
-import { getFilteredData } from "../../utils/dataGridUtils";
-import { useDataGridShortcuts } from "./useDataGridShortcuts";
+import { getFilteredData } from "../../../utils/dataGridUtils";
+
 import Controls from "./Control";
-import FilterPanel from "./FilterPanel";
-import DataGridHeader from "./DataGridHeader";
-import DataGridRow from "./DataGridRow";
-import { Pagination } from "./Pagination";
+import FilterPanel from "../filters/FilterPanel";
+
+import DataGridRow from "../rows/DataGridRow";
+
+import DataGridHeader from "../headers/DataGridHeader";
+import Pagination from "../pagination/Pagination";
+import useDataGridShortcuts from "../hooks/useDataGridShortcuts";
+
 
 export default function DataGrid() {
   const { state, dispatch } = useDataGridContext();

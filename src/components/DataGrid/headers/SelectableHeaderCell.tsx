@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Checkbox } from "../ui/CheckBox";
+import { Checkbox } from "../../ui/CheckBox";
 
 interface Props {
   allSelected: boolean;

@@ -2,11 +2,12 @@
 
 import React from "react";
 import { motion, MotionProps } from "framer-motion";
-import { Input } from "../ui/Input";
+import { Input } from "../../ui/Input";
 import { Pencil, Eye, Trash } from "lucide-react";
 import { Column } from "@/types/grid.types";
-import { Button } from "../ui/Button";
-import {User} from "../../types/api.types"
+import { Button } from "../../ui/Button";
+import { User } from "@/types/api.types";
+
 interface Props {
   col: Column;
   value: string;
