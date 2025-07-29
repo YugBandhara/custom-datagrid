@@ -7,6 +7,7 @@ import SortableHeaderCell from "./SortableHeaderCell";
 import SelectableHeaderCell from "./SelectableHeaderCell";
 import GroupHeaderRow from "./GroupHeaderRow";
 import { Column } from "@/types/grid.types";
+import { ChevronsUpDown, ChevronUp, ChevronDown } from "lucide-react";
 
 interface Props {
   columns: Column[];
@@ -66,36 +67,43 @@ export default function DataGridHeader({
   const getSortIcon = useCallback(
     (field: string) => {
       const sort = state.sortModel.find((s) => s.field === field);
-      if (!sort) return <span className="inline">⇅</span>;
+      if (!sort) {
+        return (
+          <ChevronsUpDown className="w-3.5 h-3.5 text-muted-foreground" />
+        );
+      }
+  
       return sort.direction === "asc" ? (
-        <span className="inline">↑</span>
+        <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" />
       ) : (
-        <span className="inline">↓</span>
+        <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
       );
     },
     [state.sortModel]
   );
 
   const handleSort = useCallback(
-    (field: string) => {
-      dispatch({ type: "TOGGLE_SORT", payload: field });
+    (e: React.MouseEvent<HTMLDivElement>,field: string) => {
+      dispatch({ type: "TOGGLE_SORT", payload: field , multi:e.shiftKey });
     },
     [dispatch]
   );
 
   return (
     <>
+      {/* Optional Group Header Row */}
       <GroupHeaderRow
         groupedColumns={groupedColumns}
         leftOffsets={leftOffsets}
         rightOffsets={rightOffsets}
       />
 
+      {/* Header Row */}
       <motion.tr
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="sticky top-0 z-[100] bg-[hsl(var(--grid-header))]"
+        className="sticky top-0 z-[100] bg-[hsl(var(--grid-header))] overflow-x-auto"
       >
         <SelectableHeaderCell
           allSelected={allSelected}

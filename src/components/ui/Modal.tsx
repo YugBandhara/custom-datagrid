@@ -68,7 +68,7 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
             <button
               onClick={onClose}
               aria-label="Close modal"
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition"
+              className="absolute top-3 right-3 transition"
             >
               <X className="w-5 h-5" />
               {/* Or use plain text: × */}

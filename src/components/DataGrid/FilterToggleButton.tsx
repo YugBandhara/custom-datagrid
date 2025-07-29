@@ -13,8 +13,7 @@ export default function FilterToggleButton({
 }) {
   return (
     <Button
-      variant="outline"
-      className="gap-2"
+    variant="outline" className="gap-2 w-full sm:w-auto" 
       onClick={() => setFilterOpen(!filterOpen)}
     >
       <Funnel className="h-4 w-4" />

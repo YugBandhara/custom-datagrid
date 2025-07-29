@@ -14,6 +14,7 @@ export interface Column {
   export interface SortModel {
     field: string;
     direction: 'asc' | 'desc';
+    multi?:boolean
   }
   
   export type FilterModel = Record<string, any>;

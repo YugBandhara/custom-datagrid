@@ -1,47 +1,92 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useDataGridContext } from "@/contexts/DataGridContext";
-import { sortData } from "../../utils/gridHelpers";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { AnimatePresence } from "framer-motion";
+
+import { getFilteredData } from "../../utils/dataGridUtils";
+import { useDataGridShortcuts } from "./useDataGridShortcuts";
+import Controls from "./Control";
+import FilterPanel from "./FilterPanel";
 import DataGridHeader from "./DataGridHeader";
 import DataGridRow from "./DataGridRow";
-import FilterPanel from "./FilterPanel";
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, DragEndEvent } from "@dnd-kit/core";
-import { SortableContext, horizontalListSortingStrategy } from "@dnd-kit/sortable";
-import Controls from "./Control";
 import { Pagination } from "./Pagination";
-import { AnimatePresence } from "framer-motion";
 
 export default function DataGrid() {
   const { state, dispatch } = useDataGridContext();
   const [search, setSearch] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
   const { page, pageSize } = state.pagination;
+  const hasActiveFilters = Object.values(state.filterModel).some((val) => val && val !== "");
 
-  const filteredData = sortData(
-    state.data.filter((row) => {
-      const matchesSearch = Object.values(row).some((val) =>
-        val?.toString().toLowerCase().includes(search.toLowerCase())
-      );
-      const matchesFilters = Object.entries(state.filterModel).every(([field, value]) => {
-        if (!value) return true;
-        if (field === "status") {
-          return row.status?.toLowerCase() === value.toLowerCase();
-        }
-        return row[field]?.toString().toLowerCase().includes(value.toLowerCase());
-      });
-      return matchesSearch && matchesFilters;
-    }),
-    state.sortModel
-  );
-
+  const filteredData = getFilteredData(state.data, search, state.filterModel, state.sortModel);
   const paginatedData = filteredData.slice(page * pageSize, (page + 1) * pageSize);
+
+  const [visibleCount, setVisibleCount] = useState(pageSize / 3); // lazy show part of page
+  const [isLoading, setIsLoading] = useState(false);
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const visibleData = paginatedData.slice(0, visibleCount);
+
   const allRowIds = paginatedData.map((row) => row.id.toString());
   const isAllSelected = selectedRows.length === allRowIds.length;
   const isIndeterminate = selectedRows.length > 0 && !isAllSelected;
   const sensors = useSensors(useSensor(PointerSensor));
   const hiddenColumnsCount = state.columns.filter((col) => !col.visible).length;
+
+  useDataGridShortcuts({
+    page,
+    pageSize,
+    filteredLength: filteredData.length,
+    allRowIds,
+    selectedRows,
+    setSelectedRows,
+    dispatch,
+    data: state.data,
+  });
+
+  // Reset visibleCount on page/pageSize change
+  useEffect(() => {
+    setVisibleCount(Math.min(pageSize / 3, paginatedData.length));
+  }, [page, pageSize, paginatedData.length]);
+
+  const loadMore = useCallback(() => {
+    if (isLoading || visibleCount >= paginatedData.length) return;
+    setIsLoading(true);
+    setTimeout(() => {
+      setVisibleCount((prev) => Math.min(prev + pageSize / 3, paginatedData.length));
+      setIsLoading(false);
+    }, 300);
+  }, [visibleCount, paginatedData.length, pageSize, isLoading]);
+
+  useEffect(() => {
+    if (!observerRef.current) return;
+
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        loadMore();
+      }
+    });
+
+    observer.current.observe(observerRef.current);
+  }, [loadMore]);
 
   const handleColumnDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -76,7 +121,7 @@ export default function DataGrid() {
   };
 
   return (
-    <div className="p-10 max-w-[100%] mx-auto mt-8 shadow-xl rounded-lg border transition-colors duration-300">
+    <div className="p-4 sm:p-6 md:p-8 lg:p-10 max-w-full mx-auto mt-4 sm:mt-6 md:mt-8 shadow-xl rounded-lg border transition-colors duration-300">
       <Controls
         search={search}
         setSearch={setSearch}
@@ -95,30 +140,42 @@ export default function DataGrid() {
         }}
       />
 
+      {!showFilters && hasActiveFilters && (
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => dispatch({ type: "SET_FILTER_MODEL", payload: {} })}
+            className="text-sm text-red-600 underline hover:text-red-800 transition"
+          >
+            Reset Filters
+          </button>
+        </div>
+      )}
+
       {showFilters && (
         <div className="mb-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {state.columns.map((col) => (
             <FilterPanel
               key={col.field}
               column={col}
+              filterValue={state.filterModel[col.field] || ""}
               onFilterChange={handleFilterChange}
             />
           ))}
         </div>
       )}
 
-      <div className="relative max-h-[700px] overflow-x-auto overflow-y-auto border rounded-md shadow-sm">
+      <div className="relative max-h-[670px] overflow-x-auto overflow-y-auto border rounded-md shadow-sm">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleColumnDragEnd}
         >
-          <table className="min-w-full border-collapse">
+          <table className="min-w-full border-collapse table-auto">
             <SortableContext
               items={state.columns.map((col) => col.field)}
               strategy={horizontalListSortingStrategy}
             >
-              <thead className="sticky top-0 z-[100] bg-white dark:bg-slate-900">
+              <thead className="sticky top-0 z-[100] bg-background">
                 <DataGridHeader
                   columns={state.columns}
                   allSelected={isAllSelected}
@@ -128,22 +185,26 @@ export default function DataGrid() {
               </thead>
             </SortableContext>
             <tbody>
-            <AnimatePresence initial={false}>
-              {paginatedData.map((row, i) => (
-                <DataGridRow
-                  key={row.id}
-                  id={row.id.toString()}
-                  row={row}
-                  rowIndex={i}
-                  columns={state.columns}
-                  isSelected={selectedRows.includes(row.id.toString())}
-                  onToggle={toggleRowSelect}
-                />
-              ))}
+              <AnimatePresence initial={false}>
+                {visibleData.map((row, i) => (
+                  <DataGridRow
+                    key={row.id}
+                    id={row.id.toString()}
+                    row={row}
+                    rowIndex={i}
+                    columns={state.columns}
+                    isSelected={selectedRows.includes(row.id.toString())}
+                    onToggle={toggleRowSelect}
+                  />
+                ))}
               </AnimatePresence>
             </tbody>
           </table>
         </DndContext>
+        <div ref={observerRef} className="h-6" />
+        {isLoading && (
+          <div className="text-center text-sm text-gray-500 py-2">Loading more...</div>
+        )}
       </div>
 
       <Pagination

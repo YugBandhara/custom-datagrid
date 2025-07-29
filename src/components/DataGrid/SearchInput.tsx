@@ -5,12 +5,15 @@ import { Input } from "@/components/ui/Input";
 export default function SearchInput({
   value,
   onChange,
+
 }: {
   value: string;
   onChange: (val: string) => void;
+ 
 }) {
   return (
     <Input
+
       type="text"
       placeholder="🔍 Search..."
       value={value}

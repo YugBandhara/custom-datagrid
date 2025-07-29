@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useReducer, useContext, ReactNode } from 'react';
-import { Column, Density, GridState } from '@/types/grid.types';
+import { Column, Density, GridState, SortModel } from '@/types/grid.types';
 
 const initialState: GridState = {
   data: [],
@@ -18,7 +18,7 @@ const initialState: GridState = {
   groupOrder: [],
 };
 
-type Action = { type: string; payload?: any };
+type Action = { type: string; payload?: any;multi?:boolean };
 
 function reducer(state: GridState, action: Action): GridState {
   switch (action.type) {
@@ -80,17 +80,7 @@ function reducer(state: GridState, action: Action): GridState {
           groupOrder: updatedGroupOrder,
         };
       }
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+
     case 'SET_GROUP_ORDER':
       return { ...state, groupOrder: action.payload };
 
@@ -103,24 +93,38 @@ function reducer(state: GridState, action: Action): GridState {
             : col
         ),
       };
+      case "TOGGLE_SORT": {
+        const field = action.payload;
+        const multi = action.multi ?? false;
+      
+        const existing = state.sortModel.find((s) => s.field === field);
+      
+        let newSortModel: SortModel[];
+      
+        if (multi) {
 
-    case 'TOGGLE_SORT': {
-      const field = action.payload;
-      const existing = state.sortModel.find((s) => s.field === field);
-      let newSortModel = [...state.sortModel];
-
-      if (existing) {
-        if (existing.direction === 'asc') {
-          existing.direction = 'desc';
+          newSortModel = [...state.sortModel];
         } else {
+
+          newSortModel = state.sortModel.filter((s) => s.field === field);
+        }
+      
+        if (!existing) {
+
+          newSortModel.push({ field, direction: "asc" });
+        } else if (existing.direction === "asc") {
+
+          newSortModel = newSortModel.map((s) =>
+            s.field === field ? { ...s, direction: "desc" } : s
+          );
+        } else {
+
           newSortModel = newSortModel.filter((s) => s.field !== field);
         }
-      } else {
-        newSortModel.push({ field, direction: 'asc' });
+      
+        return { ...state, sortModel: newSortModel };
       }
-
-      return { ...state, sortModel: [...newSortModel] };
-    }
+      
 
     case 'SET_FILTER_MODEL':
       return { ...state, filterModel: action.payload };
