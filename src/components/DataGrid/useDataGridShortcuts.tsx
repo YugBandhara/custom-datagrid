@@ -4,7 +4,8 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { Dispatch, SetStateAction } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
-
+import {User} from "../../types/api.types"
+import { Action } from "@/contexts/DataGridContext";
 type Props = {
   page: number;
   pageSize: number;
@@ -12,8 +13,8 @@ type Props = {
   allRowIds: string[];
   selectedRows: string[];
   setSelectedRows: Dispatch<SetStateAction<string[]>>;
-  dispatch: React.Dispatch<any>;
-  data: any[];
+  dispatch: React.Dispatch<Action>;
+  data: User[];
 };
 
 export const useDataGridShortcuts = ({

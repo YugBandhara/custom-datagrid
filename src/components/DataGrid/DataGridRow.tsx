@@ -11,10 +11,10 @@ import { validateField } from "@/utils/validators";
 import DataGridCell from "./DataGridCell";
 import Modal from "../ui/Modal";
 import { Button } from "../ui/Button";
-
+import {User} from "../../types/api.types"
 interface Props {
   id: string;
-  row: any;
+  row: User;
   columns: Column[];
   rowIndex: number;
   isSelected: boolean;
@@ -32,14 +32,14 @@ export default function DataGridRow({
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
   const { state, dispatch } = useDataGridContext();
-  const [viewRowData, setViewRowData] = useState<any>(null);
+  const [viewRowData, setViewRowData] = useState<User>();
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [editRowData, setEditRowData] = useState<any>(null);
+  const [editRowData, setEditRowData] = useState<User>();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const style = { transform: CSS.Transform.toString(transform), transition };
 
@@ -111,12 +111,13 @@ export default function DataGridRow({
     setError(null);
   };
 
-  const handleEditRow = (row: any) => {
+  const handleEditRow = (row: User) => {
     setEditRowData({ ...row });
     setModalOpen(true);
   };
 
   const handleUpdateRow = () => {
+    if (!editRowData) return;
     dispatch({ type: "UPDATE_ROW", payload: editRowData });
     setModalOpen(false);
   };
@@ -198,13 +199,13 @@ export default function DataGridRow({
                   col.field !== "actions" &&
                   !isEditing
                 ) {
-                  handleCellClick(col.field, value);
+                  handleCellClick(col.field, String(value));
                 }
               }}
             >
               <DataGridCell
                 col={col}
-                value={value}
+                value={String(value)}
                 row={row}
                 isEditing={isEditing}
                 editValue={editValue}
@@ -252,7 +253,7 @@ export default function DataGridRow({
               .filter((col) => col.field !== "id" && col.field !== "actions")
               .forEach((col) => {
                 const value = editRowData?.[col.field] || "";
-                const error = validateField(col.field, value);
+                const error = validateField(col.field, String(value));
                 if (error) {
                   hasError = true;
                   newErrors[col.field] = error;
@@ -288,10 +289,13 @@ export default function DataGridRow({
                       value={editRowData?.[col.field] || ""}
                       placeholder=" "
                       onChange={(e) =>
-                        setEditRowData((prev: any) => ({
-                          ...prev,
-                          [col.field]: e.target.value,
-                        }))
+                        setEditRowData((prev) => {
+                          if (!prev) return prev;
+                          return {
+                            ...prev,
+                            [col.field as keyof User]: e.target.value,
+                          };
+                        })
                       }
                     />
                     <label

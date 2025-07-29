@@ -94,8 +94,8 @@ export default function DataGrid() {
     dispatch({
       type: "REORDER_COLUMN",
       payload: {
-        activeId: active.id,
-        overId: over.id,
+        activeId: String(active.id),
+        overId: String(over.id),
       },
     });
   };
@@ -130,7 +130,6 @@ export default function DataGrid() {
         filterOpen={showFilters}
         setFilterOpen={setShowFilters}
         data={state.data}
-        filteredData={filteredData}
         onDelete={() => {
           const remaining = state.data.filter(
             (row) => !selectedRows.includes(row.id.toString())

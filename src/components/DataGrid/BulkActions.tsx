@@ -8,6 +8,7 @@ import { GripHorizontal, Trash } from "lucide-react";
 import ExportMenuButtons from "./ExportMenuButtons";
 import ExportMenuDropdown from "./ExportMenuDropdown";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { User } from "@/types/api.types";
 
 export default function BulkActions({
   selectedRows,
@@ -15,7 +16,7 @@ export default function BulkActions({
   onDelete,
 }: {
   selectedRows: string[];
-  data: any[];
+  data: User[];
   onDelete: (selected: string[]) => void;
 }) {
   const [open, setOpen] = useState(false);

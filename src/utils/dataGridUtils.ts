@@ -1,12 +1,13 @@
 import { sortData } from "@/utils/gridHelpers";
 import { SortModel } from "@/types/grid.types"; // Optional: Define this type yourself
+import { User } from "@/types/api.types";
 
 export const getFilteredData = (
-  data: any[],
+  data: User[],
   search: string,
   filterModel: Record<string, string>,
   sortModel: SortModel[]
-): any[] => {
+): User[] => {
   const searchLower = search.toLowerCase();
 
   const filtered = data.filter((row) => {
@@ -17,7 +18,7 @@ export const getFilteredData = (
     const matchesFilters = Object.entries(filterModel).every(([field, value]) => {
       if (!value) return true;
 
-      const fieldVal = row[field];
+      const fieldVal = row[field as keyof User];
 
       if (typeof fieldVal === "undefined" || fieldVal === null) return false;
 

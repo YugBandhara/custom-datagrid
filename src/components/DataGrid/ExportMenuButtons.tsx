@@ -2,8 +2,9 @@
 import React from "react";
 import { FileText } from "lucide-react";
 import { exportCSV, exportJSON } from "@/utils/exportUtils";
+import { User } from "@/types/api.types";
 
-const ExportMenuButtons = ({ data }: { data: any[] }) => {
+const ExportMenuButtons = ({ data }: { data: User[] }) => {
   return (
     <div className="flex flex-col gap-1">
       <button

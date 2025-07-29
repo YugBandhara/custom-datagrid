@@ -6,11 +6,11 @@ import { Input } from "../ui/Input";
 import { Pencil, Eye, Trash } from "lucide-react";
 import { Column } from "@/types/grid.types";
 import { Button } from "../ui/Button";
-
+import {User} from "../../types/api.types"
 interface Props {
   col: Column;
-  value: any;
-  row: any;
+  value: string;
+  row: User;
   isEditing: boolean;
   editValue: string;
   error?: string | null;
@@ -18,9 +18,9 @@ interface Props {
   onCommit: () => void;
   onCancel: () => void;
   wrapperMotionProps?: MotionProps;
-  onEditRow?: (row: any) => void;
+  onEditRow?: (row: User) => void;
   onDeleteRow?: (rowId: string | number) => void;
-  onViewRow?: (row: any) => void;
+  onViewRow?: (row: User) => void;
 }
 
 export default function DataGridCell({

@@ -8,6 +8,7 @@ export interface User {
     joinDate: string;
     status: 'active' | 'inactive';
     avatar?: string;
+    [key: string]: string | number | undefined;
   }
   
   export interface ApiResponse<T> {

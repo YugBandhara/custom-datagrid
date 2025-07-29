@@ -34,7 +34,7 @@ export default function Page() {
 
       const allColumns = [...baseColumns, actionColumn];
       dispatch({ type: 'SET_COLUMNS', payload: allColumns });
-      dispatch({ type: 'SET_VISIBLE_COLUMNS', payload: allColumns.map((c) => c.field) });
+   
     }
   }, [data]);
 

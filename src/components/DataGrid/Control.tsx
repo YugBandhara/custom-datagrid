@@ -24,6 +24,7 @@ import { BsPalette } from "react-icons/bs";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDataGridContext } from "@/contexts/DataGridContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { User } from "@/types/api.types";
 
 interface ControlsProps {
   search: string;
@@ -32,8 +33,7 @@ interface ControlsProps {
   hiddenColumnsCount: number;
   filterOpen: boolean;
   setFilterOpen: (val: boolean) => void;
-  data: any[];
-  filteredData: any[];
+  data: User[];
   onDelete: (selected: string[]) => void;
 }
 
@@ -45,7 +45,6 @@ export default function Controls({
   filterOpen,
   setFilterOpen,
   data,
-  filteredData,
   onDelete,
 }: ControlsProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-
+import {User} from "../types/api.types"
 export function useApi(url: string) {
-  const [data, setData] = useState<any[] | null>(null);
+  const [data, setData] = useState<User[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -13,8 +13,14 @@ export function useApi(url: string) {
         if (!res.ok) throw new Error('Failed to fetch data');
         const json = await res.json();
         setData(json);
-      } catch (err: any) {
-        setError(err.message || 'Unknown error');
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error('Error:', err.message);
+          setError(err.message)
+        } else {
+          console.error('Unknown error:', err);
+   
+        }
       } finally {
         setLoading(false);
       }

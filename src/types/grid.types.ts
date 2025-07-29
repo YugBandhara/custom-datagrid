@@ -1,3 +1,5 @@
+import { User } from "./api.types";
+
 export interface Column {
     field: string;
     headerName: string;
@@ -17,7 +19,7 @@ export interface Column {
     multi?:boolean
   }
   
-  export type FilterModel = Record<string, any>;
+  export type FilterModel = Record<string, string>;
   export type Density = "compact" | "standard" | "comfortable";
   export interface PaginationState {
     page: number;
@@ -25,7 +27,7 @@ export interface Column {
   }
   
   export interface GridState {
-    data: any[];
+    data: User[];
     columns: Column[];
     visibleColumns: string[];
     pinnedColumns: { left: string[]; right: string[] };

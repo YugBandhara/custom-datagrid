@@ -1,6 +1,8 @@
 // src/utils/exportUtils.ts
 
-export const exportCSV = (data: any[], filename = "data.csv") => {
+import { User } from "@/types/api.types";
+
+export const exportCSV = (data: User[], filename = "data.csv") => {
     if (!data.length) return;
   
     const csv = [
@@ -19,7 +21,7 @@ export const exportCSV = (data: any[], filename = "data.csv") => {
     document.body.removeChild(link);
   };
   
-  export const exportJSON = (data: any[], filename = "data.json") => {
+  export const exportJSON = (data: User[], filename = "data.json") => {
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: "application/json",
     });
@@ -32,7 +34,7 @@ export const exportCSV = (data: any[], filename = "data.csv") => {
     link.click();
     document.body.removeChild(link);
   };
-  export const openPrintWindow = (rowData: any) => {
+  export const openPrintWindow = (rowData: User) => {
     const encodedData = encodeURIComponent(JSON.stringify(rowData));
     const printUrl = `/print?data=${encodedData}`;
     window.open(printUrl, "_blank");
