@@ -9,9 +9,9 @@ import {
 } from "../../ui/DropDownMenu";
 import { Button } from "../../ui/Button";
 import { Eye } from "lucide-react";
-import { useDataGridContext } from "@/contexts/DataGridContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Checkbox } from "../../ui/CheckBox";
+import { useDataGridContext } from "@/contexts/DataGrid/DataGridContext";
 
 export default function ColumnManager() {
   const { state, dispatch } = useDataGridContext();
@@ -56,7 +56,6 @@ export default function ColumnManager() {
   );
 
   return isMobile || isTablet ? (
-    // 📱 Show toggle list directly
     <div className="flex flex-col items-start gap-2 mt-2">
 
       {ColumnOptions}
@@ -64,8 +63,8 @@ export default function ColumnManager() {
   ) : (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="w-full sm:w-auto">
-          <Eye className="h-4 w-4 mr-2" />
+        <Button variant="outline" size="sm" className="w-full sm:w-auto ">
+          <Eye className="h-4 w-4 mr-2 " />
           Columns
         </Button>
       </DropdownMenuTrigger>

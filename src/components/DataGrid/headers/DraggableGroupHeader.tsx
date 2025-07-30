@@ -1,11 +1,8 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { DraggableGroupHeaderProps } from "@/types/DataGrid/DataGridHeader.types";
 
-interface DraggableGroupHeaderProps {
-  group: string;
-  colSpan: number;
-}
 
 const DraggableGroupHeader: React.FC<DraggableGroupHeaderProps> = ({
   group,

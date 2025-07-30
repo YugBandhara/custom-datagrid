@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function DataGridSkeleton({ rows = 10, columns = 5 }: { rows?: number; columns?: number }) {
+const DataGridSkeleton = ({ rows = 10, columns = 5 }: { rows?: number; columns?: number })=> {
   return (
     <div className="border rounded-md shadow-sm overflow-x-auto">
       <table className="min-w-full table-auto">
@@ -28,3 +28,4 @@ export default function DataGridSkeleton({ rows = 10, columns = 5 }: { rows?: nu
     </div>
   );
 }
+export default DataGridSkeleton

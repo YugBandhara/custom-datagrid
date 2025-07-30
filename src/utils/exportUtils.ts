@@ -2,7 +2,7 @@
 
 import { User } from "@/types/api.types";
 
-export const exportCSV = (data: User[], filename = "data.csv") => {
+export const exportCSV = (data: User[], filename = "dataGrid.csv") => {
     if (!data.length) return;
   
     const csv = [
@@ -21,7 +21,7 @@ export const exportCSV = (data: User[], filename = "data.csv") => {
     document.body.removeChild(link);
   };
   
-  export const exportJSON = (data: User[], filename = "data.json") => {
+  export const exportJSON = (data: User[], filename = "dataGrid.json") => {
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: "application/json",
     });

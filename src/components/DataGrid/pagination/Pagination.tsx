@@ -1,7 +1,5 @@
 "use client";
-
 import React from 'react';
-import { PaginationState } from '@/types/grid.types';
 import { Button } from '../../ui/Button';
 import {
   Select,
@@ -17,26 +15,22 @@ import {
   ChevronsRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PaginationProps } from '@/types/DataGrid/DataGridPagination.type';
 
-interface PaginationProps {
-  pagination: PaginationState;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
-  pageSizeOptions?: number[];
-  totalRows?: number;
-  className?: string;
-  rowCount: number;
-}
+import {
+  DEFAULT_PAGE_SIZE_OPTIONS,
+  PAGINATION_CLASSNAMES as styles,
+} from "../../../constants/DataGrid/DataGridPagination.constants";
 
-export default function Pagination({
+const Pagination = ({
   pagination,
   onPageChange,
   onPageSizeChange,
-  pageSizeOptions = [10, 25, 50, 100],
+  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
   totalRows,
   className,
   rowCount,
-}: PaginationProps) {
+}: PaginationProps)  =>{
   const { page, pageSize } = pagination;
   const totalPages = Math.ceil(rowCount / pageSize);
   const startRow = page * pageSize + 1;
@@ -83,13 +77,9 @@ export default function Pagination({
 
   return (
     <div
-      className={cn(
-        'flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between px-4 py-3 border-t border-grid-border bg-card text-sm',
-        className
-      )}
+      className={cn(styles.wrapper, className)}
     >
-      {/* Row Count Info (visible on md and up) */}
-      <div className="hidden md:flex items-center text-muted-foreground">
+      <div className={styles.infoWrapper}>
         <span>
           Showing {startRow.toLocaleString()} to {endRow.toLocaleString()} of {rowCount.toLocaleString()} results
         </span>
@@ -99,17 +89,14 @@ export default function Pagination({
           </span>
         )}
       </div>
-
-      {/* Page Controls and Page Size */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-4">
-        {/* Pagination Controls */}
-        <div className="flex flex-wrap items-center justify-center gap-1 overflow-x-auto max-w-full">
+        <div className={styles.controlsWrapper}>
           <Button
             variant="outline"
             size="sm"
             onClick={handleFirstPage}
             disabled={page === 0}
-            className="h-8 w-8 p-0"
+            className={styles.button}
           >
             <ChevronsLeft className="h-4 w-4" />
           </Button>
@@ -118,18 +105,16 @@ export default function Pagination({
             size="sm"
             onClick={handlePreviousPage}
             disabled={page === 0}
-            className="h-8 w-8 p-0"
+            className={styles.button}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-
-          {/* Page Numbers */}
           <div className="flex items-center gap-1 px-1">
             {getVisiblePages().map((pageNum, index) =>
               pageNum === '...' ? (
                 <span
                   key={`ellipsis-${index}`}
-                  className="px-2 text-muted-foreground"
+                  className={styles.ellipsis}
                 >
                   ...
                 </span>
@@ -139,7 +124,7 @@ export default function Pagination({
                   variant={pageNum === page ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => onPageChange(Number(pageNum))}
-                  className="h-8 w-8 p-0"
+                  className={styles.button}
                 >
                   {Number(pageNum) + 1}
                 </Button>
@@ -152,7 +137,7 @@ export default function Pagination({
             size="sm"
             onClick={handleNextPage}
             disabled={page >= totalPages - 1}
-            className="h-8 w-8 p-0"
+            className={styles.button}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -161,19 +146,17 @@ export default function Pagination({
             size="sm"
             onClick={handleLastPage}
             disabled={page >= totalPages - 1}
-            className="h-8 w-8 p-0"
+            className={styles.button}
           >
             <ChevronsRight className="h-4 w-4" />
           </Button>
 
-          {/* Page Indicator (mobile) */}
-          <span className="block md:hidden text-xs text-muted-foreground ml-2 whitespace-nowrap">
+          <span className={styles.mobilePageIndicator}>
             Page {page + 1} of {totalPages}
           </span>
         </div>
 
-        {/* Rows per page */}
-        <div className="flex items-center justify-center sm:justify-end gap-2 text-muted-foreground whitespace-nowrap">
+        <div className={styles.rowsPerPageWrapper}>
           <span>Rows per page:</span>
           <Select
             value={pageSize.toString()}
@@ -195,3 +178,5 @@ export default function Pagination({
     </div>
   );
 }
+
+export default Pagination

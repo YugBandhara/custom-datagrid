@@ -9,18 +9,10 @@ import {
 } from "../../ui/DropDownMenu";
 import { Button } from "../../ui/Button";
 import { Grid3X3 } from "lucide-react";
-import { useDataGridContext } from "@/contexts/DataGridContext";
 import { Density } from "@/types/grid.types";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-
-// Define allowed density types
-const densityOptions = ["compact", "standard", "comfortable"] as const;
-
-const densityLabels: Record<Density, string> = {
-  compact: "Compact",
-  standard: "Standard",
-  comfortable: "Comfortable",
-};
+import { DENSITY_LABELS,DENSITY_OPTIONS } from "@/constants/DataGrid/DataGridActions.constants";
+import { useDataGridContext } from "@/contexts/DataGrid/DataGridContext";
 
 export default function DensitySelector() {
   const { state, dispatch } = useDataGridContext();
@@ -33,15 +25,15 @@ export default function DensitySelector() {
 
   const DensityOptions = (
     <div className="flex flex-col gap-2 mt-2">
-      {densityOptions.map((densityOption) => (
+      {DENSITY_OPTIONS.map((DENSITY_OPTIONS) => (
         <button
-          key={densityOption}
-          onClick={() => handleChange(densityOption)}
+          key={DENSITY_OPTIONS}
+          onClick={() => handleChange(DENSITY_OPTIONS)}
           className="flex items-center gap-2 px-3 py-1 border rounded-md text-sm w-full bg-background text-foreground"
         >
           <Grid3X3 className="h-4 w-4" />
-          {densityLabels[densityOption]}
-          {state.density === densityOption && (
+          {DENSITY_LABELS[DENSITY_OPTIONS]}
+          {state.density === DENSITY_OPTIONS && (
               <div className="ml-auto h-2 w-2 rounded-full bg-primary" />
             )}
         </button>
@@ -50,13 +42,12 @@ export default function DensitySelector() {
   );
 
   return isMobile || isTablet ? (
-    // 📱 Show as inline buttons
     <div className="flex flex-col items-start gap-2">
   
       {DensityOptions}
     </div>
   ) : (
-    // 🖥️ Use dropdown on desktop
+
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="w-full sm:w-auto">
@@ -71,15 +62,15 @@ export default function DensitySelector() {
             Select Row Density
           </span>
         </div>
-        {densityOptions.map((densityOption) => (
+        {DENSITY_OPTIONS.map((DENSITY_OPTIONS) => (
           <DropdownMenuCheckboxItem
-            key={densityOption}
-            checked={state.density === densityOption}
-            onCheckedChange={() => handleChange(densityOption)}
+            key={DENSITY_OPTIONS}
+            checked={state.density === DENSITY_OPTIONS}
+            onCheckedChange={() => handleChange(DENSITY_OPTIONS)}
           >
             <Grid3X3 className="h-4 w-4 mr-2" />
-            {densityLabels[densityOption]}
-            {state.density === densityOption && (
+            {DENSITY_LABELS[DENSITY_OPTIONS]}
+            {state.density === DENSITY_OPTIONS && (
               <div className="ml-auto h-2 w-2 rounded-full bg-primary" />
             )}
           </DropdownMenuCheckboxItem>

@@ -42,7 +42,7 @@ export default function BulkActions({
           className="w-full flex items-center gap-2 text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-muted rounded-md transition"
           onClick={() => {
             onDelete(selectedRows);
-            handleDropDown(); // This will close the dropdown
+            handleDropDown();
           }}
         >
           <Trash className="h-4 w-4" />
@@ -57,6 +57,7 @@ export default function BulkActions({
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
+        size="sm"
           variant="outline"
           className="gap-2 w-full sm:w-auto"
           disabled={selectedRows.length === 0}

@@ -1,15 +1,8 @@
 "use client";
 
 import React from "react";
-import { Column } from "@/types/grid.types";
-
-interface Props {
-  groupedColumns: Record<string, Column[]>;
-  leftOffsets: Record<string, number>;
-  rightOffsets: Record<string, number>;
-}
-
-const GroupHeaderRow = ({ groupedColumns, leftOffsets, rightOffsets }: Props) => {
+import { GroupHeaderRowProps } from "@/types/DataGrid/DataGridHeader.types";
+const GroupHeaderRow = ({ groupedColumns, leftOffsets, rightOffsets }: GroupHeaderRowProps) => {
   return (
     <tr className="bg-muted dark:bg-muted text-sm font-semibold border-b">
       <th className="sticky left-0 z-[60] bg-muted" style={{ left: 0 }} />

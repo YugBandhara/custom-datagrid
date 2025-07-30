@@ -1,13 +1,11 @@
-'use client';
+// contexts/data-grid/dataGridReducer.ts
+import { GridState, Column, SortModel } from "@/types/grid.types";
+import { DataGridAction } from "./dataGridTypes";
 
-import React, { createContext, useReducer, useContext, ReactNode } from 'react';
-import { Column, Density, GridState, SortModel } from '@/types/grid.types';
-import { User } from '@/types/api.types';
-
-const initialState: GridState = {
+export const initialGridState: GridState = {
   data: [],
   columns: [],
-  density: "standard" as Density,
+  density: "standard",
   visibleColumns: [],
   pinnedColumns: { left: [], right: [] },
   sortModel: [],
@@ -19,26 +17,7 @@ const initialState: GridState = {
   groupOrder: [],
 };
 
-export type Action =
-  | { type: 'SET_DATA'; payload: GridState['data'] }
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ERROR'; payload: string | null }
-  | { type: 'SET_COLUMNS'; payload: Column[] }
-  | { type: 'REORDER_COLUMN'; payload: { activeId: string; overId: string } }
-  | { type: 'SET_GROUP_ORDER'; payload: string[] }
-  | { type: 'TOGGLE_COLUMN_VISIBILITY'; payload: string }
-  | { type: 'TOGGLE_SORT'; payload: string; multi?: boolean }
-  | { type: 'SET_FILTER_MODEL'; payload: Record<string, string> }
-  | { type: 'SET_PAGE'; payload: number }
-  | { type: 'SET_PAGE_SIZE'; payload: number }
-  | { type: 'PIN_COLUMN'; payload: { field: string; side: 'left' | 'right' | null } }
-  | { type: 'UPDATE_COLUMN_WIDTH'; payload: { field: string; width: number } }
-  | { type: 'SET_DENSITY'; payload: Density }
-  | { type: 'UPDATE_ROW'; payload: User }
-  | { type: 'DELETE_ROW'; payload: string | number }
-  | { type: 'UPDATE_COLUMN_GROUP'; payload: { field: string; group: string | null } };
-
-function reducer(state: GridState, action: Action): GridState {
+export function dataGridReducer(state: GridState, action: DataGridAction): GridState {
   switch (action.type) {
     case 'SET_DATA':
       return { ...state, data: action.payload };
@@ -61,28 +40,24 @@ function reducer(state: GridState, action: Action): GridState {
       
         const overCol = state.columns[overIndex];
         const destinationGroup = overCol.group ?? undefined;
-      
-        console.log("👉 Moving column:", movedCol.field);
-        console.log("🔄 Into group:", destinationGroup);
-      
-        // Update group of dragged column
+    
+    
         movedCol.group = destinationGroup;
-      
-        // 🔁 If destination group has pinned columns, match their pinned side
+    
         if (destinationGroup) {
           const pinnedInGroup = state.columns.find(
             (col) => col.group === destinationGroup && col.pinned
           );
       
           if (pinnedInGroup) {
-            movedCol.pinned = pinnedInGroup.pinned; // "left" or "right"
+            movedCol.pinned = pinnedInGroup.pinned; 
           }
         }
       
-        // Re-insert the column at the new position
+
         updatedColumns.splice(overIndex, 0, movedCol);
       
-        // Filter groupOrder to only include groups that are still used
+ 
         const usedGroups = new Set(
           updatedColumns.filter((col) => col.group).map((col) => col.group!)
         );
@@ -167,11 +142,11 @@ function reducer(state: GridState, action: Action): GridState {
         const group = targetCol.group;
       
         const updatedColumns = state.columns.map((col) => {
-          // 🔒 Pin the entire group
+
           if (group && col.group === group) {
             if (side === null && col.field === field) {
-              console.log("oinjnjn")
-              // ✅ Ungroup & unpin only the target column
+
+
               return { ...col, group: null, pinned: null };
             }
       
@@ -179,7 +154,6 @@ function reducer(state: GridState, action: Action): GridState {
           }
       
       
-          // 🔒 If not in a group, just pin/unpin the target column
           if (!group && col.field === field) {
             return { ...col, pinned: side };
           }
@@ -234,20 +208,19 @@ function reducer(state: GridState, action: Action): GridState {
         const updatedColumns = state.columns.map((col) => {
           if (col.field !== field) return col;
       
-          // Cannot group pinned columns
-          // if (col.pinned) return { ...col, group: undefined };
+
       
           return { ...col, group };
         });
-      
-        // Clean and update groupOrder
+
+
         const activeGroups = new Set(updatedColumns.filter(c => c.group).map(c => c.group!));
         const updatedGroupOrder = [...state.groupOrder.filter(g => activeGroups.has(g))];
         if (group && !updatedGroupOrder.includes(group)) {
           updatedGroupOrder.push(group);
         }
       
-        // Reorder based on groupOrder
+        
         const grouped: Record<string, Column[]> = {};
         const ungrouped: Column[] = [];
       
@@ -284,20 +257,3 @@ function reducer(state: GridState, action: Action): GridState {
       return state;
   }
 }
-
-const DataGridContext = createContext<{
-  state: GridState;
-  dispatch: React.Dispatch<Action>;
-}>({ state: initialState, dispatch: () => { } });
-
-export const DataGridProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  return (
-    <DataGridContext.Provider value={{ state, dispatch }}>
-      {children}
-    </DataGridContext.Provider>
-  );
-};
-
-export const useDataGridContext = () => useContext(DataGridContext);

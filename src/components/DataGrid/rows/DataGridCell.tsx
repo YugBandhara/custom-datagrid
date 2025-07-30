@@ -1,30 +1,14 @@
 'use client';
 
 import React from "react";
-import { motion, MotionProps } from "framer-motion";
+import { motion } from "framer-motion";
 import { Input } from "../../ui/Input";
 import { Pencil, Eye, Trash } from "lucide-react";
-import { Column } from "@/types/grid.types";
 import { Button } from "../../ui/Button";
-import { User } from "@/types/api.types";
+import { DataGridCellProps } from "@/types/DataGrid/DataGridRow.types";
 
-interface Props {
-  col: Column;
-  value: string;
-  row: User;
-  isEditing: boolean;
-  editValue: string;
-  error?: string | null;
-  onChange: (value: string) => void;
-  onCommit: () => void;
-  onCancel: () => void;
-  wrapperMotionProps?: MotionProps;
-  onEditRow?: (row: User) => void;
-  onDeleteRow?: (rowId: string | number) => void;
-  onViewRow?: (row: User) => void;
-}
 
-export default function DataGridCell({
+const  DataGridCell = ({
   col,
   value,
   row,
@@ -38,7 +22,7 @@ export default function DataGridCell({
   onEditRow,
   onDeleteRow,
   onViewRow
-}: Props) {
+}: DataGridCellProps) =>{
   const field = col.field;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -151,3 +135,6 @@ export default function DataGridCell({
 
   return renderDefaultCell();
 }
+
+export default DataGridCell
+

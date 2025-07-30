@@ -2,7 +2,7 @@
 import React from "react";
 import { Input } from "@/components/ui/Input";
 
-export default function SearchInput({
+const SearchInput = ({
   value,
   onChange,
 
@@ -10,7 +10,7 @@ export default function SearchInput({
   value: string;
   onChange: (val: string) => void;
  
-}) {
+}) => {
   return (
     <Input
 
@@ -22,3 +22,4 @@ export default function SearchInput({
     />
   );
 }
+export default SearchInput 

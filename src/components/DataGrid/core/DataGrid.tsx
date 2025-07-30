@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useDataGridContext } from "@/contexts/DataGridContext";
+import React, { useState} from "react";
+
 import {
   DndContext,
   closestCenter,
@@ -15,41 +15,36 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { AnimatePresence } from "framer-motion";
-
 import { getFilteredData } from "../../../utils/dataGridUtils";
-
 import Controls from "./Control";
 import FilterPanel from "../filters/FilterPanel";
-
 import DataGridRow from "../rows/DataGridRow";
-
 import DataGridHeader from "../headers/DataGridHeader";
 import Pagination from "../pagination/Pagination";
 import useDataGridShortcuts from "../hooks/useDataGridShortcuts";
+import useLazyPagination  from "../hooks/useLazyPagination";
+import useRowSelection from "../hooks/useRowSelection";
+import { useDataGridContext } from "@/contexts/DataGrid/DataGridContext";
 
 
-export default function DataGrid() {
+ const DataGrid = ()=> {
   const { state, dispatch } = useDataGridContext();
   const [search, setSearch] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
-
   const { page, pageSize } = state.pagination;
   const hasActiveFilters = Object.values(state.filterModel).some((val) => val && val !== "");
-
   const filteredData = getFilteredData(state.data, search, state.filterModel, state.sortModel);
   const paginatedData = filteredData.slice(page * pageSize, (page + 1) * pageSize);
-
-  const [visibleCount, setVisibleCount] = useState(pageSize / 3); // lazy show part of page
-  const [isLoading, setIsLoading] = useState(false);
-  const observerRef = useRef<HTMLDivElement | null>(null);
-  const observer = useRef<IntersectionObserver | null>(null);
-
-  const visibleData = paginatedData.slice(0, visibleCount);
-
+  const { visibleData, observerRef, isLoading } = useLazyPagination(paginatedData, pageSize);
   const allRowIds = paginatedData.map((row) => row.id.toString());
-  const isAllSelected = selectedRows.length === allRowIds.length;
-  const isIndeterminate = selectedRows.length > 0 && !isAllSelected;
+  const {
+    selectedRows,
+    setSelectedRows,
+    isAllSelected,
+    isIndeterminate,
+    toggleSelectAll,
+    toggleRowSelect,
+  } = useRowSelection(allRowIds);
   const sensors = useSensors(useSensor(PointerSensor));
   const hiddenColumnsCount = state.columns.filter((col) => !col.visible).length;
 
@@ -63,34 +58,6 @@ export default function DataGrid() {
     dispatch,
     data: state.data,
   });
-
-  // Reset visibleCount on page/pageSize change
-  useEffect(() => {
-    setVisibleCount(Math.min(pageSize / 3, paginatedData.length));
-  }, [page, pageSize, paginatedData.length]);
-
-  const loadMore = useCallback(() => {
-    if (isLoading || visibleCount >= paginatedData.length) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      setVisibleCount((prev) => Math.min(prev + pageSize / 3, paginatedData.length));
-      setIsLoading(false);
-    }, 300);
-  }, [visibleCount, paginatedData.length, pageSize, isLoading]);
-
-  useEffect(() => {
-    if (!observerRef.current) return;
-
-    if (observer.current) observer.current.disconnect();
-
-    observer.current = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        loadMore();
-      }
-    });
-
-    observer.current.observe(observerRef.current);
-  }, [loadMore]);
 
   const handleColumnDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -112,16 +79,6 @@ export default function DataGrid() {
         [field]: value === "all" ? "" : value,
       },
     });
-  };
-
-  const toggleSelectAll = () => {
-    setSelectedRows(isAllSelected || isIndeterminate ? [] : allRowIds);
-  };
-
-  const toggleRowSelect = (id: string, checked: boolean) => {
-    setSelectedRows((prev) =>
-      checked ? [...prev, id] : prev.filter((rowId) => rowId !== id)
-    );
   };
 
   return (
@@ -166,7 +123,6 @@ export default function DataGrid() {
           ))}
         </div>
       )}
-
       <div className="relative max-h-[670px] overflow-x-auto overflow-y-auto border rounded-md shadow-sm">
         <DndContext
           sensors={sensors}
@@ -224,3 +180,4 @@ export default function DataGrid() {
     </div>
   );
 }
+export default DataGrid

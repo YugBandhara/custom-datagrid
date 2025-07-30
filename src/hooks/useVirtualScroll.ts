@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export function useVirtualScroll<T>(data: T[], rowHeight = 40, containerHeight = 400) {
   const [scrollTop, setScrollTop] = useState(0);

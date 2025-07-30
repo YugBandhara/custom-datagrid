@@ -21,25 +21,16 @@ import {
 import { FileText, Settings } from "lucide-react";
 import { BsPalette } from "react-icons/bs";
 import { motion, AnimatePresence } from "framer-motion";
-import { useDataGridContext } from "@/contexts/DataGridContext";
+
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { User } from "@/types/api.types";
 import ThemeSelector from "../theme/ThemeSelector";
 import ThemeToggle from "../theme/ThemeToggle";
 import ViewManager from "../actions/ViewManager";
+import { ControlsProps } from "@/types/DataGrid/DataGridControl.types";
+import { useDataGridContext } from "@/contexts/DataGrid/DataGridContext";
 
-interface ControlsProps {
-  search: string;
-  setSearch: (val: string) => void;
-  selectedRows: string[];
-  hiddenColumnsCount: number;
-  filterOpen: boolean;
-  setFilterOpen: (val: boolean) => void;
-  data: User[];
-  onDelete: (selected: string[]) => void;
-}
 
-export default function Controls({
+const Controls = ({
   search,
   setSearch,
   selectedRows,
@@ -48,7 +39,7 @@ export default function Controls({
   setFilterOpen,
   data,
   onDelete,
-}: ControlsProps) {
+}: ControlsProps) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { dispatch } = useDataGridContext();
 
@@ -75,22 +66,21 @@ export default function Controls({
 
   return (
     <>
-      {/* 🌗 Always show ThemeToggle on top-right */}
+
       <div className="flex justify-end w-full mb-2">
         <ThemeToggle />
       </div>
 
-      {/* 🔧 Controls Layout */}
       <div className="flex  sm:flex-row sm:items-center gap-3 w-full mb-4">
-        {/* 🔍 Search Input */}
+
         <div className="w-full sm:w-auto">
           <SearchInput value={search} onChange={setSearch}  />
         </div>
 
-        {/* Middle Flexible Space (only on tablet & up) */}
+
         <div className="flex-1 hidden sm:block" />
 
-        {/* 🧰 Right Controls */}
+
         <div className="flex flex-wrap gap-2 items-center justify-end w-full sm:w-auto">
           {!isMobile && (
             <>
@@ -120,7 +110,7 @@ export default function Controls({
               />
               <DropdownMenu open={open} onOpenChange={setOpen}>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="gap-2">
+                  <Button variant="outline" className="gap-2" size="sm">
                     <FileText className="h-4 w-4" />
                     Export
                   </Button>
@@ -149,7 +139,6 @@ export default function Controls({
         </div>
       </div>
 
-      {/* 🎬 Overlay Backdrop */}
       {drawerOpen && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -161,7 +150,7 @@ export default function Controls({
         />
       )}
 
-      {/* 📱 Slide-in Drawer for Tablet/Mobile */}
+
       <AnimatePresence>
         {drawerOpen && (
           <motion.div
@@ -240,3 +229,5 @@ export default function Controls({
     </>
   );
 }
+
+export default Controls

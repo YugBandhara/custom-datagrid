@@ -1,4 +1,5 @@
-import { useDataGridContext } from '../contexts/DataGridContext';
+import { useDataGridContext } from "@/contexts/DataGrid/DataGridContext";
+
 
 export const useDataGrid = () => {
   const { state, dispatch } = useDataGridContext();

@@ -2,14 +2,9 @@
 
 import React from "react";
 import { Checkbox } from "../../ui/CheckBox";
+import { SelectableHeaderCellsProps } from "@/types/DataGrid/DataGridHeader.types";
 
-interface Props {
-  allSelected: boolean;
-  isIndeterminate?: boolean;
-  onToggleAll: () => void;
-}
-
-const SelectableHeaderCell = ({ allSelected, isIndeterminate, onToggleAll }: Props) => (
+const SelectableHeaderCell = ({ allSelected, isIndeterminate, onToggleAll }: SelectableHeaderCellsProps) => (
   <th
     className="sticky left-0 z-[101] bg-[hsl(var(--grid-header))] w-[30px] min-w-[30px] max-w-[30px]"
     style={{ left: 0 }}

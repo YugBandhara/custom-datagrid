@@ -1,8 +1,9 @@
 import '@/app/globals.css';
 import { ReactNode } from 'react';
-import { DataGridProvider } from '@/contexts/DataGridContext';
+
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import './globals.css'
+import { DataGridProvider } from '@/contexts/DataGrid/DataGridContext';
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" >

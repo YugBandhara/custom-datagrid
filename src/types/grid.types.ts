@@ -5,7 +5,7 @@ export interface Column {
     headerName: string;
     width?: number;
     sortable?: boolean;
-    pinned?: 'left' | 'right' | null ;
+    pinned?: PinSide;
     filterable?: boolean;
     editable?: boolean;
     visible?: boolean;
@@ -13,6 +13,7 @@ export interface Column {
     type?: 'text' | 'number' | 'date' | 'select' | 'actions';
   }
   
+  export type PinSide = "left" | "right" | null;
   export interface SortModel {
     field: string;
     direction: 'asc' | 'desc';

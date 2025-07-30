@@ -1,11 +1,6 @@
 import { User } from "@/types/api.types";
+import { SortModel } from "@/types/grid.types";
 
-type SortDirection = 'asc' | 'desc';
-
-interface SortModel {
-  field: string;
-  direction: SortDirection;
-}
 
 export function sortData(data: User[], sortModel: SortModel[]): User[] {
   if (!sortModel.length) return data;

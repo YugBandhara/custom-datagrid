@@ -13,14 +13,11 @@ import { Label } from "../../ui/Label";
 import { Card, CardContent } from "../../ui/Card";
 import { Button } from "../../ui/Button";
 import { Filter, Search, CheckCircle, XCircle } from "lucide-react";
+import { FilterPannelProps } from "@/types/DataGrid/DataGridControl.types";
 
-interface Props {
-  column: Column;
-  onFilterChange: (field: string, value: string) => void;
-  filterValue?: string;
-}
 
-export default function FilterPanel({ column, onFilterChange, filterValue = "" }: Props) {
+
+const  FilterPanel = ({ column, onFilterChange, filterValue = "" }: FilterPannelProps) =>{
   if (["avatar"].includes(column.field)) return null;
 
   const getFieldIcon = (field: string) => {
@@ -121,3 +118,5 @@ export default function FilterPanel({ column, onFilterChange, filterValue = "" }
     </Card>
   );
 }
+
+export default FilterPanel

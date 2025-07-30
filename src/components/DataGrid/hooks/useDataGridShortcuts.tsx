@@ -1,22 +1,9 @@
 "use client";
 
 import { useHotkeys } from "react-hotkeys-hook";
-import { Dispatch, SetStateAction } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { UseDataGridShortcutsProps } from "@/types/DataGrid/hooks/DataGridHooks.types";
 
-
-import { Action } from "@/contexts/DataGridContext";
-import { User } from "@/types/api.types";
-type Props = {
-  page: number;
-  pageSize: number;
-  filteredLength: number;
-  allRowIds: string[];
-  selectedRows: string[];
-  setSelectedRows: Dispatch<SetStateAction<string[]>>;
-  dispatch: React.Dispatch<Action>;
-  data: User[];
-};
 
 const useDataGridShortcuts = ({
   page,
@@ -27,7 +14,7 @@ const useDataGridShortcuts = ({
   setSelectedRows,
   dispatch,
   data,
-}: Props) => {
+}: UseDataGridShortcutsProps) => {
   const { setThemeManually } = useTheme();
 
   useHotkeys(["ctrl+right", "meta+right"], () => {

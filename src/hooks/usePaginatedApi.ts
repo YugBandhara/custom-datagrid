@@ -34,7 +34,7 @@ export function usePaginatedApi(url: string, limit: number = 20) {
 
   useEffect(() => {
     loadMore();
-  }, []); // Load first page
+  }, []); 
 
   return { data, loading, error, loadMore, hasMore };
 }

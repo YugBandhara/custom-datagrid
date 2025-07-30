@@ -1,4 +1,5 @@
-[{"id":1,"name":"Catharine Deluca","email":"cdeluca0@meetup.com","role":"Account Representative II","department":"Legal","salary":26721,"joinDate":"6/15/2021","status":"active","avatar":"https://robohash.org/autquiaquisquam.png?size=50x50&set=set1"},
+[
+    {"id":1,"name":"Catharine Deluca","email":"cdeluca0@meetup.com","role":"Account Representative II","department":"Legal","salary":26721,"joinDate":"6/15/2021","status":"active","avatar":"https://robohash.org/autquiaquisquam.png?size=50x50&set=set1"},
 {"id":2,"name":"Linus Southcoat","email":"lsouthcoat1@usda.gov","role":"Media Manager I","department":"Legal","salary":99275,"joinDate":"6/15/2021","status":"inactive","avatar":"https://robohash.org/etconsequaturlibero.png?size=50x50&set=set1"},
 {"id":3,"name":"Sabine Ledgley","email":"sledgley2@google.com.br","role":"Professor","department":"Support","salary":53665,"joinDate":"6/15/2021","status":"inactive","avatar":"https://robohash.org/suscipitvitaenon.png?size=50x50&set=set1"},
 {"id":4,"name":"Nicola Dancey","email":"ndancey3@pagesperso-orange.fr","role":"Payment Adjustment Coordinator","department":"Engineering","salary":2785,"joinDate":"6/15/2021","status":"inactive","avatar":"https://robohash.org/magnamfugacupiditate.png?size=50x50&set=set1"},
