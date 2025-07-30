@@ -6,8 +6,8 @@ A fully custom-built Data Grid component using **Next.js 14+ (App Router)**, **T
 
 ## 🔗 Live Links
 
-- 🚀 **Deployed App**: [https://your-deployment.vercel.app](https://your-deployment.vercel.app)
-- 🎥 **Demo Video**: [Watch on YouTube](https://youtu.be/your-demo-video)
+- 🚀 **Deployed App**: [https://yugbandhara-datagrid.vercel.app/](https://yugbandhara-datagrid.vercel.app/)
+- 🎥 **Demo Video**: [Watch on YouTube](https://youtu.be/FSuY5AazR0M)
 
 ---
 
